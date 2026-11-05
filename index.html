@@ -504,7 +504,88 @@ details.appendChild(deleteButton);
 
   details.hidden = false;
 }
+// SCHULUNGSTAGE SPEICHERN
+const trainingDaysKey = "gleitschirm-training-days-v1";
 
+let trainingDays;
+
+try {
+  const saved = JSON.parse(localStorage.getItem(trainingDaysKey));
+  trainingDays = Array.isArray(saved) ? saved : [];
+} catch {
+  trainingDays = [];
+}
+
+function saveTrainingDays() {
+  try {
+    localStorage.setItem(
+      trainingDaysKey,
+      JSON.stringify(trainingDays)
+    );
+  } catch {
+    alert("Schulungstage konnten nicht gespeichert werden.");
+  }
+}
+
+function renderTrainingDays() {
+  const container = $("trainingDays");
+  container.replaceChildren();
+
+  const sortedDays = [...trainingDays].sort(
+    (a, b) => a.date.localeCompare(b.date)
+  );
+
+  sortedDays.forEach(day => {
+    const box = document.createElement("div");
+    box.className = "maneuver";
+
+    const dateText = new Date(
+      day.date + "T12:00:00"
+    ).toLocaleDateString("de-CH", {
+      weekday: "long",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    });
+
+    addText(box, "strong", "📅 " + dateText);
+
+    const info = addText(
+      box, "p", "Teilnehmerauswahl folgt"
+    );
+    info.className = "small";
+
+    container.appendChild(box);
+  });
+}
+
+$("trainingDate").value =
+  new Date().toLocaleDateString("en-CA");
+
+$("createTrainingDay").onclick = () => {
+  const date = $("trainingDate").value;
+
+  if (!date) {
+    alert("Bitte zuerst ein Datum auswählen.");
+    return;
+  }
+
+  if (trainingDays.some(day => day.date === date)) {
+    alert("Für dieses Datum gibt es bereits einen Schulungstag.");
+    return;
+  }
+
+  trainingDays.push({
+    id: crypto.randomUUID(),
+    date: date,
+    participants: []
+  });
+
+  saveTrainingDays();
+  renderTrainingDays();
+};
+
+renderTrainingDays();
 renderStudents();
 </script>
 </body>
