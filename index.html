@@ -556,35 +556,6 @@ const info = addText(
 );
 info.className = "small";
 
-students.forEach(student => {
-  const label = document.createElement("label");
-  label.className = "material";
-
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-
-  checkbox.checked = day.participants.includes(student.id);
-
-  checkbox.onchange = () => {
-    if (checkbox.checked) {
-      if (!day.participants.includes(student.id)) {
-        day.participants.push(student.id);
-      }
-    } else {
-      day.participants = day.participants.filter(
-        id => id !== student.id
-      );
-    }
-
-    saveTrainingDays();
-    renderTrainingDays();
-  };
-
-  label.appendChild(checkbox);
-  addText(label, "span", student.name);
-
-  box.appendChild(label);
-});
 
 const attending = students.filter(
   student => day.participants.includes(student.id)
@@ -595,6 +566,66 @@ addText(
   "p",
   "👨‍🎓 " + attending.length + " Schüler angemeldet"
 );
+
+// Nur angemeldete Schüler anzeigen
+attending.forEach(student => {
+  const row = document.createElement("div");
+  row.className = "material";
+
+  const nameButton = document.createElement("button");
+  nameButton.textContent = "👨‍🎓 " + student.name;
+  nameButton.onclick = () => showStudent(student.id);
+  row.appendChild(nameButton);
+
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "✕";
+  removeButton.style.background = "#dc2626";
+  removeButton.title = "Vom Schulungstag abmelden";
+
+  removeButton.onclick = () => {
+    day.participants = day.participants.filter(
+      id => id !== student.id
+    );
+    saveTrainingDays();
+    renderTrainingDays();
+  };
+
+  row.appendChild(removeButton);
+  box.appendChild(row);
+});
+
+// Weitere Schüler nur auf Wunsch anzeigen
+const addButton = document.createElement("button");
+addButton.textContent = "+ Teilnehmer hinzufügen";
+box.appendChild(addButton);
+
+const selection = document.createElement("div");
+selection.hidden = true;
+box.appendChild(selection);
+
+addButton.onclick = () => {
+  selection.hidden = !selection.hidden;
+  addButton.textContent = selection.hidden
+    ? "+ Teilnehmer hinzufügen"
+    : "Auswahl schliessen";
+};
+
+students
+  .filter(student => !day.participants.includes(student.id))
+  .forEach(student => {
+    const button = document.createElement("button");
+    button.className = "student";
+    button.textContent = "+ " + student.name;
+
+    button.onclick = () => {
+      day.participants.push(student.id);
+      saveTrainingDays();
+      renderTrainingDays();
+    };
+
+    selection.appendChild(button);
+  });
+
 
 
     container.appendChild(box);
