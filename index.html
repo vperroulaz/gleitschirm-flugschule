@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -10,15 +11,21 @@ body{margin:0;background:#eef4f8;color:#17324b;font-family:Arial,sans-serif}
 header{background:#176c9a;color:white;padding:24px;text-align:center}
 main{max-width:850px;margin:24px auto;padding:16px}
 .card{background:white;border-radius:14px;padding:20px;margin-bottom:15px;box-shadow:0 3px 12px #0001}
-.student{width:100%;display:block;text-align:left;background:#f2f7fb;color:#17324b;border:1px solid #dce8f0;padding:15px;border-radius:10px;margin:10px 0;cursor:pointer}
+.student{width:100%;text-align:left;background:#f2f7fb;color:#17324b;border:1px solid #dce8f0;padding:15px;border-radius:10px;margin:8px 0;cursor:pointer}
 .student:hover{background:#e2f0fa}
 .progress{height:9px;background:#e4e9ed;border-radius:9px;overflow:hidden}
 .bar{height:100%;background:#28a476}
-li{margin:12px 0}
+.material{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #eee}
+.material input{width:20px;height:20px}
+.notice{background:#fff3db;padding:14px;border-radius:10px;margin-top:15px}
+li{margin:10px 0}
 </style>
 </head>
 <body>
-<header><h1>🪂 Gleitschirm Flugschule</h1><p>Schülerverwaltung</p></header>
+<header>
+<h1>🪂 Gleitschirm Flugschule</h1>
+<p>Schülerverwaltung</p>
+</header>
 <main>
 <section class="card">
 <h2>👨‍🎓 Flugschüler</h2>
@@ -27,13 +34,18 @@ li{margin:12px 0}
 <section class="card" id="details" hidden></section>
 </main>
 <script>
-const students=[
-{name:"Lena Müller",level:"Grundausbildung",flights:8,material:false,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug"]},
-{name:"Marco Steiner",level:"Höhenflüge",flights:24,material:true,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug","Kurvenflug","Landeanflug","Ziellandung"]},
-{name:"Sofia Weber",level:"Grundausbildung",flights:13,material:false,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug","Kurvenflug"]}
-];
+const materials=["Gleitschirm","Gurtzeug","Notschirm","Funkgerät"];
 const allManeuvers=["Startvorbereitung","Starttechnik","Geradeausflug","Kurvenflug","Acht fliegen","Ohren anlegen","Landeanflug","Ziellandung"];
+
+const students=[
+{name:"Lena Müller",level:"Grundausbildung",flights:8,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug"],material:[false,false,false,false]},
+{name:"Marco Steiner",level:"Höhenflüge",flights:24,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug","Kurvenflug","Landeanflug","Ziellandung"],material:[true,true,true,true]},
+{name:"Sofia Weber",level:"Grundausbildung",flights:13,maneuvers:["Startvorbereitung","Starttechnik","Geradeausflug","Kurvenflug"],material:[false,true,false,false]}
+];
+
+let selected=0;
 const list=document.getElementById("students");
+
 students.forEach((s,i)=>{
 const b=document.createElement("button");
 b.className="student";
@@ -41,21 +53,23 @@ b.textContent=s.name+" · "+s.level+" · "+s.flights+" Flüge";
 b.onclick=()=>showStudent(i);
 list.appendChild(b);
 });
+
+function addText(parent,tag,value){
+const e=document.createElement(tag);
+e.textContent=value;
+parent.appendChild(e);
+return e;
+}
+
 function showStudent(i){
+selected=i;
 const s=students[i],d=document.getElementById("details");
 d.replaceChildren();
-const title=document.createElement("h2");
-title.textContent=s.name;
-d.appendChild(title);
-const info=document.createElement("p");
-info.textContent=s.level+" · "+s.flights+" Flüge";
-d.appendChild(info);
-const status=document.createElement("p");
-status.textContent=s.material?"✅ Eigenes Material vorhanden":"🎒 Schulmaterial mitbringen";
-d.appendChild(status);
-const heading=document.createElement("h3");
-heading.textContent="Ausbildungsstand";
-d.appendChild(heading);
+
+addText(d,"h2",s.name);
+addText(d,"p",s.level+" · "+s.flights+" Flüge");
+addText(d,"h3","Ausbildungsstand");
+
 const progress=document.createElement("div");
 progress.className="progress";
 const bar=document.createElement("div");
@@ -63,14 +77,44 @@ bar.className="bar";
 bar.style.width=(s.maneuvers.length/allManeuvers.length*100)+"%";
 progress.appendChild(bar);
 d.appendChild(progress);
+
 const ul=document.createElement("ul");
-allManeuvers.forEach(m=>{
-const li=document.createElement("li");
-li.textContent=(s.maneuvers.includes(m)?"✅ ":"⬜ ")+m;
-ul.appendChild(li);
-});
+allManeuvers.forEach(m=>addText(ul,"li",(s.maneuvers.includes(m)?"✅ ":"⬜ ")+m));
 d.appendChild(ul);
+
+addText(d,"h3","🎒 Materialverwaltung");
+addText(d,"p","Häkchen setzen, wenn eigenes Material vorhanden ist:");
+
+materials.forEach((m,j)=>{
+const label=document.createElement("label");
+label.className="material";
+const check=document.createElement("input");
+check.type="checkbox";
+check.checked=s.material[j];
+check.onchange=()=>{
+s.material[j]=check.checked;
+updateMissing();
+};
+label.appendChild(check);
+addText(label,"span",m+" – eigenes Material");
+d.appendChild(label);
+});
+
+const missing=document.createElement("div");
+missing.id="missing";
+missing.className="notice";
+d.appendChild(missing);
 d.hidden=false;
+updateMissing();
+}
+
+function updateMissing(){
+const missing=document.getElementById("missing");
+const s=students[selected];
+const needed=materials.filter((m,j)=>!s.material[j]);
+missing.textContent=needed.length
+?"🎒 Flugschule muss mitbringen: "+needed.join(", ")
+:"✅ Alles eigene Material vorhanden!";
 }
 </script>
 </body>
