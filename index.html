@@ -550,10 +550,52 @@ function renderTrainingDays() {
 
     addText(box, "strong", "📅 " + dateText);
 
-    const info = addText(
-      box, "p", "Teilnehmerauswahl folgt"
-    );
-    info.className = "small";
+    
+const info = addText(
+  box, "p", "Teilnehmer auswählen:"
+);
+info.className = "small";
+
+students.forEach(student => {
+  const label = document.createElement("label");
+  label.className = "material";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+
+  checkbox.checked = day.participants.includes(student.id);
+
+  checkbox.onchange = () => {
+    if (checkbox.checked) {
+      if (!day.participants.includes(student.id)) {
+        day.participants.push(student.id);
+      }
+    } else {
+      day.participants = day.participants.filter(
+        id => id !== student.id
+      );
+    }
+
+    saveTrainingDays();
+    renderTrainingDays();
+  };
+
+  label.appendChild(checkbox);
+  addText(label, "span", student.name);
+
+  box.appendChild(label);
+});
+
+const attending = students.filter(
+  student => day.participants.includes(student.id)
+);
+
+addText(
+  box,
+  "p",
+  "👨‍🎓 " + attending.length + " Schüler angemeldet"
+);
+
 
     container.appendChild(box);
   });
