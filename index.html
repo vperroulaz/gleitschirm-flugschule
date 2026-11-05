@@ -340,6 +340,30 @@ details.appendChild(plusButton);
   editButton.textContent = "✏️ Schüler bearbeiten";
   editButton.onclick = () => openEditor(id);
   details.appendChild(editButton);
+  const deleteButton = document.createElement("button");
+deleteButton.textContent = "🗑️ Schüler löschen";
+deleteButton.style.background = "#dc2626";
+
+deleteButton.onclick = () => {
+  const confirmed = confirm(
+    "Möchtest du " + student.name +
+    " wirklich löschen?\n\n" +
+    "Alle Manöver, Bemerkungen und Materialangaben " +
+    "dieses Schülers werden ebenfalls gelöscht."
+  );
+
+  if (!confirmed) return;
+
+  students = students.filter(s => s.id !== student.id);
+  save();
+  renderStudents();
+
+  details.replaceChildren();
+  details.hidden = true;
+  selectedId = null;
+};
+
+details.appendChild(deleteButton);
 
   // MANÖVER
   addText(details, "h3", "🪂 Manöver");
