@@ -258,8 +258,20 @@ function renderStudents() {
   students.forEach(student => {
     const button = document.createElement("button");
     button.className = "student";
-    button.textContent =
-      student.name + " · " + student.flights + " Flüge";
+const missing = materials.filter(
+  (_, index) => !student.material[index]
+);
+
+const materialStatus = missing.length === 0
+  ? "✅ Alles vorhanden"
+  : "🎒 Material nötig: " + missing.join(", ");
+
+button.textContent =
+  student.name + " · " +
+  student.flights + " Flüge\n" +
+  materialStatus;
+
+button.style.whiteSpace = "pre-line";
 
     button.onclick = () => showStudent(student.id);
     $("students").appendChild(button);
