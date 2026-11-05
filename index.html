@@ -145,6 +145,11 @@ label {
         <input id="name" required maxlength="100">
       </label>
       <label>
+  Schirmmodell / Farbe
+  <input id="glider" maxlength="100"
+         placeholder="z.B. Advance Pi 3 rot">
+</label>
+      <label>
         Anzahl Flüge
         <input id="flights" type="number"
                min="0" max="99999" value="0" required>
@@ -270,6 +275,7 @@ function openEditor(id = null) {
     : "Neuen Schüler hinzufügen";
 
   $("name").value = student ? student.name : "";
+  $("glider").value = student ? (student.glider || "") : "";
   $("flights").value = student ? student.flights : 0;
 
   $("editor").hidden = false;
@@ -286,6 +292,7 @@ $("studentForm").onsubmit = event => {
   event.preventDefault();
 
   const name = $("name").value.trim();
+  const glider = $("glider").value.trim();
   const flights = Number($("flights").value);
 
   if (!name || !Number.isInteger(flights) ||
@@ -297,8 +304,9 @@ $("studentForm").onsubmit = event => {
   if (editingId === null) {
     const student = {
       id: crypto.randomUUID(),
-      name,
-      flights,
+name,
+flights,
+glider,
       material: [false, false, false, false],
       maneuvers: Array(7).fill("red"),
       notes: ""
@@ -312,6 +320,7 @@ $("studentForm").onsubmit = event => {
 
     student.name = name;
     student.flights = flights;
+    student.glider = glider;
     selectedId = student.id;
   }
 
@@ -330,6 +339,11 @@ function showStudent(id) {
   details.replaceChildren();
 
   addText(details, "h2", student.name);
+  addText(
+  details,
+  "p",
+  "🪂 Schirm: " + (student.glider || "Nicht eingetragen")
+);
   const flightCount = addText(
   details, "p", student.flights + " Flüge"
 );
