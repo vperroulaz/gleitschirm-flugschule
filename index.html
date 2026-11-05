@@ -320,7 +320,21 @@ function showStudent(id) {
   details.replaceChildren();
 
   addText(details, "h2", student.name);
-  addText(details, "p", student.flights + " Flüge");
+  const flightCount = addText(
+  details, "p", student.flights + " Flüge"
+);
+
+const plusButton = document.createElement("button");
+plusButton.textContent = "➕ 1 Flug";
+
+plusButton.onclick = () => {
+  student.flights += 1;
+  flightCount.textContent = student.flights + " Flüge";
+  save();
+  renderStudents();
+};
+
+details.appendChild(plusButton);
 
   const editButton = document.createElement("button");
   editButton.textContent = "✏️ Schüler bearbeiten";
