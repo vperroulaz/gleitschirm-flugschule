@@ -181,7 +181,7 @@ const materials = [
   "Notschirm",
   "Funkgerät"
 ];
-
+const materialSymbols = ["🪂", "💺", "🆘", "📡"];
 const maneuvers = [
   "Doppelkreise",
   "Acht",
@@ -609,6 +609,42 @@ attending.forEach(student => {
 });
 
 // Weitere Schüler nur auf Wunsch anzeigen
+// MATERIAL FÜR DIESEN SCHULUNGSTAG
+const materialTitle = addText(
+  box, "h4", "🎒 Material für diesen Schulungstag"
+);
+
+const neededMaterials = materials.map((material, index) => {
+  const count = attending.filter(student =>
+    !student.material[index]
+  ).length;
+
+  return { material, count };
+});
+
+const missingMaterials = neededMaterials.filter(
+  item => item.count > 0
+);
+
+if (attending.length === 0) {
+  addText(
+    box, "p", "Noch keine Teilnehmer angemeldet."
+  );
+} else if (missingMaterials.length === 0) {
+  addText(
+    box, "p", "✅ Alle Teilnehmer haben eigenes Material."
+  );
+} else {
+  missingMaterials.forEach(item => {
+    addText(
+      box,
+      "p",
+materialSymbols[materials.indexOf(item.material)] +
+" " + item.material + ": " +
+item.count + " benötigt"
+    );
+  });
+}
 const addButton = document.createElement("button");
 addButton.textContent = "+ Teilnehmer hinzufügen";
 box.appendChild(addButton);
