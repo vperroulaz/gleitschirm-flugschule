@@ -131,7 +131,7 @@ label {
 </header>
 
 <main>
-<details class="card">
+<details class="card" id="studentOverview">
   <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
     👨‍🎓 Flugschüler
   </summary>
@@ -742,7 +742,13 @@ $("createTrainingDay").onclick = () => {
   saveTrainingDays();
   renderTrainingDays();
 };
-
+$("studentOverview").addEventListener("toggle", () => {
+  if (!$("studentOverview").open) {
+    $("details").hidden = true;
+    $("details").replaceChildren();
+    selectedId = null;
+  }
+});
 renderTrainingDays();
 renderStudents();
 </script>
