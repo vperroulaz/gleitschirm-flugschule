@@ -614,7 +614,28 @@ function renderTrainingDays() {
     });
 
     addText(box, "strong", "📅 " + dateText);
+const deleteDayButton = document.createElement("button");
+deleteDayButton.textContent = "🗑️ Schulungstag löschen";
+deleteDayButton.style.background = "#dc2626";
 
+deleteDayButton.onclick = () => {
+  const confirmed = confirm(
+    "Möchtest du den Schulungstag vom " +
+    dateText +
+    " wirklich löschen?"
+  );
+
+  if (!confirmed) return;
+
+  trainingDays = trainingDays.filter(
+    item => item.date !== day.date
+  );
+
+  saveTrainingDays();
+  renderTrainingDays();
+};
+
+box.appendChild(deleteDayButton);
     
 const info = addText(
   box, "p", "Teilnehmer auswählen:"
