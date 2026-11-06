@@ -356,7 +356,22 @@ function showStudent(id) {
 
   const details = $("details");
   details.replaceChildren();
+const details = $("details");
+details.replaceChildren();
 
+const closeButton = document.createElement("button");
+closeButton.textContent = "✕ Schliessen";
+closeButton.style.background = "#64748b";
+
+closeButton.onclick = () => {
+  details.hidden = true;
+  details.replaceChildren();
+  selectedId = null;
+};
+
+details.appendChild(closeButton);
+
+addText(details, "h2", student.name);
   addText(details, "h2", student.name);
   addText(
   details,
