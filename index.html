@@ -131,11 +131,14 @@ label {
 </header>
 
 <main>
-  <section class="card">
-    <h2>👨‍🎓 Flugschüler</h2>
-    <button id="addBtn">+ Neuer Schüler</button>
-    <div id="students"></div>
-  </section>
+<details class="card">
+  <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
+    👨‍🎓 Flugschüler
+  </summary>
+
+  <button id="addBtn">+ Neuer Schüler</button>
+  <div id="students"></div>
+</details>
 
   <section class="card" id="editor" hidden>
     <h2 id="editorTitle">Schüler hinzufügen</h2>
@@ -161,8 +164,10 @@ label {
     </form>
   </section>
   <section class="card" id="details" hidden></section>
-<section class="card">
-  <h2>📅 Schulungstage</h2>
+<details class="card">
+  <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
+    📅 Schulungstage
+  </summary>
   <label>
     Datum auswählen
     <input id="trainingDate" type="date">
@@ -171,7 +176,7 @@ label {
     + Schulungstag hinzufügen
   </button>
   <div id="trainingDays"></div>
-</section>
+</details>
 </main>
 
 <script>
