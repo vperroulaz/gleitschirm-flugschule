@@ -354,13 +354,10 @@ function showStudent(id) {
   const student = students.find(s => s.id === id);
   if (!student) return;
 
-  const details = $("details");
-  details.replaceChildren();
-const details = $("details");
+ const details = $("details");
 details.replaceChildren();
 
 addText(details, "h2", student.name);
-  addText(details, "h2", student.name);
   addText(
   details,
   "p",
