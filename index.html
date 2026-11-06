@@ -266,12 +266,19 @@ const materialStatus = missing.length === 0
   ? "✅ Alles vorhanden"
   : "🎒 Material nötig: " + missing.join(", ");
 
-button.textContent =
-  student.name + " · " +
-  student.flights + " Flüge\n" +
-  materialStatus;
+button.replaceChildren();
 
-button.style.whiteSpace = "pre-line";
+const headline = document.createElement("strong");
+headline.textContent =
+  student.name + " · " + student.flights + " Flüge";
+
+button.appendChild(headline);
+
+const statusLine = document.createElement("div");
+statusLine.textContent = materialStatus;
+statusLine.style.marginTop = "7px";
+
+button.appendChild(statusLine);
 
     button.onclick = () => showStudent(student.id);
     $("students").appendChild(button);
