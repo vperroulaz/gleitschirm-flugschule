@@ -194,7 +194,8 @@ const maneuvers = [
   "Ohren und Richtungswechsel",
   "Rollen",
   "Nicken",
-  "Klapper"
+  "Klapper",
+  "Selbstständiges Landen"
 ];
 
 const initialStudents = [
@@ -203,7 +204,7 @@ const initialStudents = [
     name: "Lena Müller",
     flights: 8,
     material: [false, false, false, false],
-    maneuvers: Array(7).fill("red"),
+    maneuvers: Array(maneuvers.length).fill("red"),
     notes: ""
   },
   {
@@ -222,7 +223,7 @@ const initialStudents = [
     name: "Sofia Weber",
     flights: 13,
     material: [false, true, false, false],
-    maneuvers: Array(7).fill("red"),
+   maneuvers: Array(maneuvers.length).fill("red"),
     notes: ""
   }
 ];
@@ -236,7 +237,17 @@ try {
 } catch {
   students = initialStudents;
 }
+  
+students.forEach(student => {
+  if (!Array.isArray(student.maneuvers)) {
+    student.maneuvers = [];
+  }
 
+  while (student.maneuvers.length < maneuvers.length) {
+    student.maneuvers.push("red");
+  }
+});
+  
 let selectedId = null;
 let editingId = null;
 
@@ -332,7 +343,7 @@ name,
 flights,
 glider,
       material: [false, false, false, false],
-      maneuvers: Array(7).fill("red"),
+      maneuvers: Array(maneuvers.length).fill("red"),
       notes: ""
     };
 
