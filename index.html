@@ -577,6 +577,22 @@ function saveTrainingDays() {
 }
 
 function renderTrainingDays() {
+    // Vergangene Schulungstage automatisch löschen
+  const today = new Date();
+  const todayString =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  const previousCount = trainingDays.length;
+
+  trainingDays = trainingDays.filter(
+    day => day.date >= todayString
+  );
+
+  if (trainingDays.length !== previousCount) {
+    saveTrainingDays();
+  }
   const container = $("trainingDays");
   container.replaceChildren();
 
