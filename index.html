@@ -297,6 +297,28 @@ checkPasswordRecovery();
 }
 
 checkExistingLogin();
+  async function saveStudentToSupabase(student) {
+  const { data, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !data.user) {
+    throw new Error("Bitte zuerst anmelden.");
+  }
+
+  const { error } = await supabaseClient
+    .from("students")
+    .upsert({
+      id: getSupabaseStudentId(student.id),
+      name: student.name,
+      flights: student.flights,
+      glider: student.glider || "",
+      material: student.material || [false, false, false, false],
+      maneuvers: student.maneuvers || [],
+      notes: student.notes || ""
+    }, { onConflict: "id" });
+
+  if (error) throw error;
+}
   function getSupabaseStudentId(id) {
   const demoIds = {
     "demo-1": "00000000-0000-4000-8000-000000000001",
