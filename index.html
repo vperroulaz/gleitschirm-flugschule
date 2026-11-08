@@ -274,6 +274,30 @@ supabaseClient.auth.onAuthStateChange((event) => {
 });
 
 checkPasswordRecovery();
+  document.getElementById("loginBtn").addEventListener(
+  "click",
+  async function () {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    const message = document.getElementById("loginMessage");
+    message.textContent = "Anmeldung läuft ...";
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    document.getElementById("loginPassword").value = "";
+
+    if (error) {
+      message.textContent = "Anmeldung fehlgeschlagen: " + error.message;
+      return;
+    }
+
+    message.textContent = "Erfolgreich angemeldet!";
+  }
+);
 const materials = [
   "Gleitschirm",
   "Gurtzeug",
