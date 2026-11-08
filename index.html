@@ -221,6 +221,59 @@ const supabaseClient = window.supabase.createClient(
   supabaseUrl,
   supabaseKey
 );
+  async function checkPasswordRecovery() {
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    document.getElementById("loginMessage").textContent =
+      "Fehler bei der Anmeldung: " + error.message;
+    return;
+  }
+
+  if (data.session && window.location.hash.includes("type=recovery")) {
+    document.getElementById("newPasswordArea").style.display = "block";
+    document.getElementById("loginMessage").textContent =
+      "Bitte lege jetzt dein neues Passwort fest.";
+  }
+}
+
+document.getElementById("saveNewPasswordBtn").addEventListener(
+  "click",
+  async function () {
+    const password = document.getElementById("newPassword").value;
+
+    if (password.length < 12) {
+      document.getElementById("loginMessage").textContent =
+        "Bitte verwende mindestens 12 Zeichen.";
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+      password: password
+    });
+
+    if (error) {
+      document.getElementById("loginMessage").textContent =
+        "Fehler: " + error.message;
+      return;
+    }
+
+    document.getElementById("newPassword").value = "";
+    document.getElementById("newPasswordArea").style.display = "none";
+    document.getElementById("loginMessage").textContent =
+      "Passwort erfolgreich gespeichert!";
+  }
+);
+
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    document.getElementById("newPasswordArea").style.display = "block";
+    document.getElementById("loginMessage").textContent =
+      "Bitte lege jetzt dein neues Passwort fest.";
+  }
+});
+
+checkPasswordRecovery();
 const materials = [
   "Gleitschirm",
   "Gurtzeug",
