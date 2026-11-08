@@ -289,6 +289,19 @@ checkPasswordRecovery();
   const { data, error } = await supabaseClient.auth.getUser();
 
   if (!error && data.user) {
+    try {
+  const supabaseStudents = await loadStudentsFromSupabase();
+
+  if (supabaseStudents.length > 0) {
+    students = supabaseStudents;
+    renderStudents();
+  }
+} catch (loadError) {
+  console.error("Schüler konnten nicht geladen werden:", loadError);
+  document.getElementById("loginMessage").textContent =
+    "Schüler konnten nicht aus Supabase geladen werden.";
+  return;
+}
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     document.getElementById("loginMessage").textContent =
