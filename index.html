@@ -916,15 +916,10 @@ function renderTrainingDays() {
     String(today.getMonth() + 1).padStart(2, "0") + "-" +
     String(today.getDate()).padStart(2, "0");
 
-  const previousCount = trainingDays.length;
-
-  trainingDays = trainingDays.filter(
-    day => day.date >= todayString
-  );
-
-  if (trainingDays.length !== previousCount) {
-    saveTrainingDays();
-  }
+ trainingDays = trainingDays.filter(
+  day => day.date >= todayString
+);
+  
   const container = $("trainingDays");
   container.replaceChildren();
 
