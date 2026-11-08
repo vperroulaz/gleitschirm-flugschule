@@ -286,10 +286,8 @@ checkPasswordRecovery();
     try {
   const supabaseStudents = await loadStudentsFromSupabase();
 
-  if (supabaseStudents.length > 0) {
-    students = supabaseStudents;
-    renderStudents();
-  }
+  students = supabaseStudents;
+  renderStudents();
 } catch (loadError) {
   console.error("Schüler konnten nicht geladen werden:", loadError);
   document.getElementById("loginMessage").textContent =
