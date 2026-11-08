@@ -167,15 +167,9 @@ label {
   Abmelden
 </button>
 </section>
-  <div id="protectedArea" style="display:none;">
-    <div style="margin-bottom: 15px;">
-  <button id="transferStudentsBtn" type="button">
-    🪂 Testschüler nach Supabase übertragen
-  </button>
-  <p id="transferMessage" class="small"></p>
-</div>
-<details class="card" id="studentOverview">
-  <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
+<div id="protectedArea" style="display:none;">
+  <details class="card" id="studentOverview">
+    <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
     👨‍🎓 Flugschüler
   </summary>
 
@@ -399,51 +393,6 @@ function saveStudentToSupabase(student) {
 
   return demoIds[id] || id;
 }
-  async function transferStudentsToSupabase() {
-  const message = document.getElementById("transferMessage");
-  const button = document.getElementById("transferStudentsBtn");
-
-  button.disabled = true;
-  message.textContent = "Übertragung läuft ...";
-
-  try {
-    const { data: userData, error: userError } =
-      await supabaseClient.auth.getUser();
-
-    if (userError || !userData.user) {
-      throw new Error("Bitte zuerst anmelden.");
-    }
-
-    const { error } = await supabaseClient
-      .from("students")
-      .upsert(students.map(student => ({
-id: getSupabaseStudentId(student.id),
-        name: student.name,
-        flights: student.flights,
-        glider: student.glider || "",
-        material: student.material || [false, false, false, false],
-        maneuvers: student.maneuvers || [],
-        notes: student.notes || ""
-      })), { onConflict: "id" });
-
-    if (error) throw error;
-
-    message.textContent =
-      "Übertragung erfolgreich! " + students.length +
-      " Schüler nach Supabase übertragen.";
-
-  } catch (error) {
-    message.textContent =
-      "Übertragung fehlgeschlagen: " + error.message;
-  } finally {
-    button.disabled = false;
-  }
-}
-
-document.getElementById("transferStudentsBtn").addEventListener(
-  "click",
-  transferStudentsToSupabase
-);
   async function testSupabaseConnection() {
   const { data, error } = await supabaseClient
     .from("students")
