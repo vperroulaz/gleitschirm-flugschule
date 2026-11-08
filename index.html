@@ -1089,7 +1089,7 @@ students
 $("trainingDate").value =
   new Date().toLocaleDateString("en-CA");
 
-$("createTrainingDay").onclick = () => {
+$("createTrainingDay").onclick = async () => {
   const date = $("trainingDate").value;
 
   if (!date) {
@@ -1102,14 +1102,20 @@ $("createTrainingDay").onclick = () => {
     return;
   }
 
-  trainingDays.push({
-    id: crypto.randomUUID(),
-    date: date,
-    participants: []
-  });
+ const newDay = {
+  id: crypto.randomUUID(),
+  date: date,
+  participants: []
+};
 
-  saveTrainingDays();
+try {
+  await saveTrainingDayToSupabase(newDay);
+  trainingDays.push(newDay);
   renderTrainingDays();
+} catch (error) {
+  console.error("Schulungstag konnte nicht gespeichert werden:", error);
+  alert("Schulungstag konnte nicht in Supabase gespeichert werden.");
+}
 };
 $("studentOverview").addEventListener("toggle", () => {
   if (!$("studentOverview").open) {
