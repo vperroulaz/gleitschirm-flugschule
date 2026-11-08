@@ -950,7 +950,7 @@ const deleteDayButton = document.createElement("button");
 deleteDayButton.textContent = "🗑️ Schulungstag löschen";
 deleteDayButton.style.background = "#dc2626";
 
-deleteDayButton.onclick = () => {
+deleteDayButton.onclick = async () => {
   const confirmed = confirm(
     "Möchtest du den Schulungstag vom " +
     dateText +
@@ -959,12 +959,23 @@ deleteDayButton.onclick = () => {
 
   if (!confirmed) return;
 
-  trainingDays = trainingDays.filter(
-    item => item.date !== day.date
-  );
+  try {
+    const { error } = await supabaseClient
+      .from("training_days")
+      .delete()
+      .eq("id", day.id);
 
-  saveTrainingDays();
-  renderTrainingDays();
+    if (error) throw error;
+
+    trainingDays = trainingDays.filter(
+      item => item.id !== day.id
+    );
+
+    renderTrainingDays();
+  } catch (error) {
+    console.error("Schulungstag konnte nicht gelöscht werden:", error);
+    alert("Schulungstag konnte nicht aus Supabase gelöscht werden.");
+  }
 };
 
 box.appendChild(deleteDayButton);
