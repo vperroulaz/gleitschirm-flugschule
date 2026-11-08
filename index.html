@@ -506,14 +506,7 @@ const initialStudents = [
 ];
 
 const storageKey = "gleitschirm-demo-v2";
-let students;
-
-try {
-  const saved = JSON.parse(localStorage.getItem(storageKey));
-  students = Array.isArray(saved) ? saved : initialStudents;
-} catch {
-  students = initialStudents;
-}
+let students = [];
   
 students.forEach(student => {
   if (!Array.isArray(student.maneuvers)) {
