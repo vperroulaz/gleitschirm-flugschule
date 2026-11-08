@@ -323,6 +323,12 @@ checkExistingLogin();
   return data;
 }
   async function deleteStudentFromSupabase(student) {
+      const id = getSupabaseStudentId(student.id);
+  const pendingSave = studentSaveQueues.get(id);
+
+  if (pendingSave) {
+    await pendingSave;
+  }
   const { data, error: authError } =
     await supabaseClient.auth.getUser();
 
@@ -337,27 +343,52 @@ checkExistingLogin();
 
   if (error) throw error;
 }
-  async function saveStudentToSupabase(student) {
-  const { data, error: authError } =
-    await supabaseClient.auth.getUser();
-
-  if (authError || !data.user) {
-    throw new Error("Bitte zuerst anmelden.");
+ const studentSaveQueues = new Map();
+  const deletingStudentIds = new Set();
+function saveStudentToSupabase(student) {
+  const id = getSupabaseStudentId(student.id);
+    if (deletingStudentIds.has(id)) {
+    return Promise.reject(
+      new Error("Dieser Schüler wird gerade gelöscht.")
+    );
   }
 
-  const { error } = await supabaseClient
-    .from("students")
-    .upsert({
-      id: getSupabaseStudentId(student.id),
-      name: student.name,
-      flights: student.flights,
-      glider: student.glider || "",
-      material: student.material || [false, false, false, false],
-      maneuvers: student.maneuvers || [],
-      notes: student.notes || ""
-    }, { onConflict: "id" });
+  const snapshot = {
+    id: id,
+    name: student.name,
+    flights: student.flights,
+    glider: student.glider || "",
+    material: [...student.material],
+    maneuvers: [...student.maneuvers],
+    notes: student.notes || ""
+  };
 
-  if (error) throw error;
+  const previous = studentSaveQueues.get(id) || Promise.resolve();
+
+  const current = previous.catch(() => {}).then(async () => {
+    const { data, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !data.user) {
+      throw new Error("Bitte zuerst anmelden.");
+    }
+
+    const { error } = await supabaseClient
+      .from("students")
+      .upsert(snapshot, { onConflict: "id" });
+
+    if (error) throw error;
+  });
+
+  studentSaveQueues.set(id, current);
+
+  current.finally(() => {
+    if (studentSaveQueues.get(id) === current) {
+      studentSaveQueues.delete(id);
+    }
+  }).catch(() => {});
+
+  return current;
 }
   function getSupabaseStudentId(id) {
   const demoIds = {
@@ -693,7 +724,7 @@ plusButton.textContent = "➕ 1 Flug";
 plusButton.onclick = () => {
   student.flights += 1;
   flightCount.textContent = student.flights + " Flüge";
-  save();
+save(student);
   renderStudents();
 };
 
@@ -707,7 +738,7 @@ details.appendChild(plusButton);
 deleteButton.textContent = "🗑️ Schüler löschen";
 deleteButton.style.background = "#dc2626";
 
-deleteButton.onclick = () => {
+deleteButton.onclick = async () => {
   const confirmed = confirm(
     "Möchtest du " + student.name +
     " wirklich löschen?\n\n" +
@@ -716,7 +747,18 @@ deleteButton.onclick = () => {
   );
 
   if (!confirmed) return;
-
+  if (deleteButton.disabled) return;
+deleteButton.disabled = true;
+  deletingStudentIds.add(getSupabaseStudentId(student.id));
+  try {
+    await deleteStudentFromSupabase(student);
+ } catch (error) {
+  alert("Schüler konnte nicht aus Supabase gelöscht werden: " + error.message);
+    deleteButton.disabled = false;
+  return;
+} finally {
+  deletingStudentIds.delete(getSupabaseStudentId(student.id));
+}
   students = students.filter(s => s.id !== student.id);
   save();
   renderStudents();
@@ -780,7 +822,7 @@ details.appendChild(deleteButton);
 
         button.onclick = () => {
           student.maneuvers[index] = value;
-          save();
+          save(student);
           drawButtons();
           updateProgress();
         };
@@ -824,7 +866,7 @@ details.appendChild(deleteButton);
 
     checkbox.onchange = () => {
       student.material[index] = checkbox.checked;
-      save();
+      save(student);
       updateMissing();
       renderStudents();
       renderTrainingDays();
@@ -846,10 +888,17 @@ details.appendChild(deleteButton);
   notes.placeholder = "Hinweise für den nächsten Flug ...";
   notes.value = student.notes || "";
 
-  notes.oninput = () => {
-    student.notes = notes.value;
-    save();
-  };
+ let notesSaveTimer;
+
+notes.oninput = () => {
+  student.notes = notes.value;
+save();
+  clearTimeout(notesSaveTimer);
+
+  notesSaveTimer = setTimeout(() => {
+    save(student);
+  }, 800);
+};
 
   details.appendChild(notes);
 
