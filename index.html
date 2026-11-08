@@ -444,8 +444,16 @@ function saveStudentToSupabase(student) {
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     testSupabaseConnection();
-    students = await loadStudentsFromSupabase();
-    renderStudents();
+    try {
+      students = await loadStudentsFromSupabase();
+      renderStudents();
+    } catch (loadError) {
+      console.error("Schüler konnten nicht geladen werden:", loadError);
+      message.textContent =
+        "Schüler konnten nicht aus Supabase geladen werden.";
+      document.getElementById("protectedArea").style.display = "none";
+      return;
+    }
   }
 );
 const materials = [
