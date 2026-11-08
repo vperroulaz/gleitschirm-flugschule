@@ -315,7 +315,15 @@ checkExistingLogin();
     const { error } = await supabaseClient
       .from("students")
       .upsert(students.map(student => ({
-        id: student.id,
+id: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(student.id)
+  ? student.id
+  : student.id === "demo-1"
+    ? "00000000-0000-4000-8000-000000000001"
+    : student.id === "demo-2"
+      ? "00000000-0000-4000-8000-000000000002"
+      : student.id === "demo-3"
+        ? "00000000-0000-4000-8000-000000000003"
+        : crypto.randomUUID(),
         name: student.name,
         flights: student.flights,
         glider: student.glider || "",
