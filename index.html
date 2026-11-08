@@ -446,7 +446,8 @@ function saveStudentToSupabase(student) {
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     testSupabaseConnection();
-    await loadStudentsFromSupabase();
+    students = await loadStudentsFromSupabase();
+    renderStudents();
   }
 );
 const materials = [
