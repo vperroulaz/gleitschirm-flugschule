@@ -291,6 +291,17 @@ checkPasswordRecovery();
 }
 
 checkExistingLogin();
+  async function testSupabaseConnection() {
+  const { data, error } = await supabaseClient
+    .from("students")
+    .select("id");
+
+  if (error) {
+    console.log("Supabase-Test fehlgeschlagen:", error.message);
+  } else {
+    console.log("Supabase-Test erfolgreich! Schüler:", data.length);
+  }
+}
   document.getElementById("logoutBtn").addEventListener(
   "click",
   async function () {
@@ -332,6 +343,7 @@ checkExistingLogin();
     message.textContent = "Erfolgreich angemeldet!";
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
+    testSupabaseConnection();
   }
 );
 const materials = [
