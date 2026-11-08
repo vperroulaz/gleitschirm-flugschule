@@ -458,8 +458,11 @@ function saveStudentToSupabase(student) {
     document.getElementById("logoutBtn").style.display = "inline-block";
     testSupabaseConnection();
     try {
-      students = await loadStudentsFromSupabase();
-      renderStudents();
+students = await loadStudentsFromSupabase();
+trainingDays = await loadTrainingDaysFromSupabase();
+
+renderStudents();
+renderTrainingDays();
     } catch (loadError) {
       console.error("Schüler konnten nicht geladen werden:", loadError);
       message.textContent =
