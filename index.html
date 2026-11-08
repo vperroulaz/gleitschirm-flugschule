@@ -541,11 +541,17 @@ let editingId = null;
 
 const $ = id => document.getElementById(id);
 
-function save() {
+function save(student = null) {
   try {
     localStorage.setItem(storageKey, JSON.stringify(students));
   } catch {
     alert("Speichern im Browser nicht möglich.");
+  }
+    if (student) {
+    saveStudentToSupabase(student).catch(error => {
+      console.error("Supabase-Speicherfehler:", error);
+      alert("Änderung konnte nicht in Supabase gespeichert werden: " + error.message);
+    });
   }
 }
 
