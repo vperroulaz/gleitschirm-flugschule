@@ -297,6 +297,18 @@ checkPasswordRecovery();
 }
 
 checkExistingLogin();
+  async function loadStudentsFromSupabase() {
+  const { data, error } = await supabaseClient
+    .from("students")
+    .select("*")
+    .order("name");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
   async function deleteStudentFromSupabase(student) {
   const { data, error: authError } =
     await supabaseClient.auth.getUser();
