@@ -1000,13 +1000,23 @@ attending.forEach(student => {
   removeButton.style.background = "#dc2626";
   removeButton.title = "Vom Schulungstag abmelden";
 
-  removeButton.onclick = () => {
-    day.participants = day.participants.filter(
+ removeButton.onclick = async () => {
+  const updatedDay = {
+    ...day,
+    participants: day.participants.filter(
       id => id !== student.id
-    );
-    saveTrainingDays();
-    renderTrainingDays();
+    )
   };
+
+  try {
+    await saveTrainingDayToSupabase(updatedDay);
+    day.participants = updatedDay.participants;
+    renderTrainingDays();
+  } catch (error) {
+    console.error("Teilnehmer konnte nicht abgemeldet werden:", error);
+    alert("Änderung konnte nicht in Supabase gespeichert werden.");
+  }
+};
 
   row.appendChild(removeButton);
   box.appendChild(row);
