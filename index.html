@@ -629,9 +629,9 @@ $("studentForm").onsubmit = event => {
     alert("Bitte gültige Angaben eingeben.");
     return;
   }
-
+let student;
   if (editingId === null) {
-    const student = {
+   student = {
       id: crypto.randomUUID(),
 name,
 flights,
@@ -644,7 +644,7 @@ glider,
     students.push(student);
     selectedId = student.id;
   } else {
-    const student = students.find(s => s.id === editingId);
+student = students.find(s => s.id === editingId);
     if (!student) return;
 
     student.name = name;
