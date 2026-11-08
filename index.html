@@ -1081,11 +1081,21 @@ students
     button.className = "student";
     button.textContent = "+ " + student.name;
 
-    button.onclick = () => {
-      day.participants.push(student.id);
-      saveTrainingDays();
-      renderTrainingDays();
-    };
+  button.onclick = async () => {
+  const updatedDay = {
+    ...day,
+    participants: [...day.participants, student.id]
+  };
+
+  try {
+    await saveTrainingDayToSupabase(updatedDay);
+    day.participants = updatedDay.participants;
+    renderTrainingDays();
+  } catch (error) {
+    console.error("Teilnehmer konnte nicht angemeldet werden:", error);
+    alert("Änderung konnte nicht in Supabase gespeichert werden.");
+  }
+};
 
     selection.appendChild(button);
   });
