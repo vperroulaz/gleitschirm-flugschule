@@ -314,6 +314,18 @@ checkExistingLogin();
 
   return data;
 }
+  async function loadTrainingDaysFromSupabase() {
+  const { data, error } = await supabaseClient
+    .from("training_days")
+    .select("*")
+    .order("date");
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
   async function deleteStudentFromSupabase(student) {
       const id = getSupabaseStudentId(student.id);
   const pendingSave = studentSaveQueues.get(id);
