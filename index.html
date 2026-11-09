@@ -193,6 +193,11 @@ label {
          placeholder="z.B. Advance Pi 3 rot">
 </label>
       <label>
+  Gewicht des Schülers (kg)
+  <input id="weight" type="number"
+         min="0" max="300" step="0.1" placeholder="z.B. 75.5">
+</label>
+      <label>
         Anzahl Flüge
         <input id="flights" type="number"
                min="0" max="99999" value="0" required>
@@ -383,6 +388,7 @@ function saveStudentToSupabase(student) {
     name: student.name,
     flights: student.flights,
     glider: student.glider || "",
+    weight: student.weight ?? null,
     material: [...student.material],
     maneuvers: [...student.maneuvers],
     notes: student.notes || ""
@@ -584,6 +590,7 @@ function openEditor(id = null) {
 
   $("name").value = student ? student.name : "";
   $("glider").value = student ? (student.glider || "") : "";
+  $("weight").value = student ? (student.weight ?? "") : "";
   $("flights").value = student ? student.flights : 0;
 
   $("editor").hidden = false;
@@ -601,20 +608,24 @@ $("studentForm").onsubmit = event => {
 
   const name = $("name").value.trim();
   const glider = $("glider").value.trim();
+  const weight = $("weight").value === "" ? null : Number($("weight").value);
   const flights = Number($("flights").value);
 
-  if (!name || !Number.isInteger(flights) ||
-      flights < 0 || flights > 99999) {
-    alert("Bitte gültige Angaben eingeben.");
-    return;
-  }
+ if (!name || !Number.isInteger(flights) ||
+    flights < 0 || flights > 99999 ||
+    (weight !== null &&
+      (!Number.isFinite(weight) || weight <= 0 || weight > 300))) {
+  alert("Bitte gültige Angaben eingeben.");
+  return;
+}
 let student;
   if (editingId === null) {
    student = {
       id: crypto.randomUUID(),
-name,
-flights,
-glider,
+      name,
+      flights,
+      glider,
+      weight,
       material: [false, false, false, false],
       maneuvers: Array(maneuvers.length).fill("red"),
       notes: ""
@@ -629,6 +640,7 @@ student = students.find(s => s.id === editingId);
     student.name = name;
     student.flights = flights;
     student.glider = glider;
+    student.weight = weight;
     selectedId = student.id;
   }
 
@@ -661,6 +673,11 @@ addText(details, "h2", student.name);
   details,
   "p",
   "🪂 Schirm: " + (student.glider || "Nicht eingetragen")
+);
+  addText(
+  details,
+  "p",
+  "⚖️ Gewicht: " + (student.weight == null ? "Nicht eingetragen" : student.weight + " kg")
 );
   const flightCount = addText(
   details, "p", student.flights + " Flüge"
