@@ -133,7 +133,8 @@ label {
 <main>
   <section class="card" id="loginArea">
   <h2>🔒 Fluglehrer-Anmeldung</h2>
-
+  <div id="loginFields">
+    
   <label>
     E-Mail-Adresse
     <input id="loginEmail" type="email"
@@ -163,6 +164,7 @@ label {
   <p id="loginMessage" class="small">
     Die Anmeldung wird gerade eingerichtet.
   </p>
+  </div>
     <button id="logoutBtn" type="button" style="display:none;">
   Abmelden
 </button>
@@ -297,6 +299,7 @@ renderTrainingDays();
     "Schüler konnten nicht aus Supabase geladen werden.";
   return;
 }
+    document.getElementById("loginFields").style.display = "none";
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     document.getElementById("loginMessage").textContent =
@@ -435,6 +438,7 @@ function saveStudentToSupabase(student) {
 
     document.getElementById("protectedArea").style.display = "none";
     document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("loginFields").style.display = "block";
     students = [];
     trainingDays = [];
     document.getElementById("loginMessage").textContent =
@@ -463,6 +467,7 @@ function saveStudentToSupabase(student) {
     }
 
     message.textContent = "Erfolgreich angemeldet!";
+    document.getElementById("loginFields").style.display = "none";
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     testSupabaseConnection();
