@@ -1248,6 +1248,71 @@ materialLine.textContent = missingForStudent.length === 0
 info.appendChild(materialLine);
 row.appendChild(info);
 
+// Fluganzahl für diesen Schüler eingeben
+const flightInput = document.createElement("input");
+flightInput.type = "number";
+flightInput.min = "0";
+flightInput.step = "1";
+flightInput.value = "";
+flightInput.placeholder = "Flüge";
+flightInput.title = "Neue Flüge für " + student.name;
+flightInput.style.width = "65px";
+
+row.appendChild(flightInput);
+
+const saveFlightButton = document.createElement("button");
+saveFlightButton.textContent = "Flüge speichern";
+row.appendChild(saveFlightButton);
+const savedMessage = document.createElement("span");
+savedMessage.textContent = "✅ Gespeichert";
+savedMessage.style.color = "#16a34a";
+savedMessage.hidden = true;
+row.appendChild(savedMessage);
+saveFlightButton.onclick = async () => {
+  const additionalFlights = Number(flightInput.value);
+
+  if (
+    !Number.isInteger(additionalFlights) ||
+    additionalFlights <= 0
+  ) {
+    alert("Bitte eine gültige Flugzahl grösser als 0 eingeben.");
+    return;
+  }
+
+    if (saveFlightButton.disabled) {
+    return;
+  }
+  
+  saveFlightButton.disabled = true;
+  saveFlightButton.textContent = "Speichert ...";
+
+  try {
+    const updatedStudent = {
+      ...student,
+      flights: Number(student.flights || 0) + additionalFlights
+    };
+
+    await saveStudentToSupabase(updatedStudent);
+
+    student.flights = updatedStudent.flights;
+    
+   infoLine.textContent =
+  "🪂 " + student.flights + " Flüge · " +
+  "⚖️ " + (student.weight == null
+    ? "Gewicht fehlt"
+    : student.weight + " kg");
+    
+    flightInput.disabled = true;
+    saveFlightButton.hidden = true;
+    savedMessage.hidden = false;
+  } catch (error) {
+    console.error("Flüge konnten nicht gespeichert werden:", error);
+    alert("Flüge konnten nicht gespeichert werden.");
+    saveFlightButton.disabled = false;
+    saveFlightButton.textContent = "Flüge speichern";
+  }
+};
+
   const removeButton = document.createElement("button");
   removeButton.textContent = "✕";
   removeButton.style.background = "#dc2626";
