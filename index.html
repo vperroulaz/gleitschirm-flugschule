@@ -1059,10 +1059,10 @@ missing.textContent = needed.length
       : "✅ Alles eigene Material vorhanden!";
 
 materialSummary.textContent = needed.length > 0
-  ? "🎒 Materialverwaltung"
+  ? "🎒 Flugschule muss mitbringen: " + needed.join(", ")
   : "✅ Alles eigene Material vorhanden!";
     
-materialSection.open = needed.length > 0;
+materialSection.open = false;
   }
 
   materials.forEach((material, index) => {
@@ -1086,7 +1086,6 @@ materialSection.open = needed.length > 0;
     materialSection.appendChild(label);
   });
 
- materialSection.appendChild(missing);
   updateMissing();
   
 const bottomCloseButton = closeButton.cloneNode(true);
