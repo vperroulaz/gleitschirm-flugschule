@@ -145,6 +145,18 @@ label {
   cursor: pointer;
   font-size: 20px;
 }
+.training-section {
+  background: #f0f5fa;
+  border: 1px solid #d5e2ed;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.training-section h4 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
 </style>
 </head>
 <body>
@@ -1103,18 +1115,16 @@ deleteDayButton.onclick = async () => {
 };
 
 box.appendChild(deleteDayButton);
-    
-const info = addText(
-  box, "p", "Teilnehmer auswählen:"
-);
-info.className = "small";
-
 
 const attending = students.filter(
   student => day.participants.includes(student.id)
 );
     
 // GEMEINSAME FLUGERFASSUNG FÜR ALLE ANGEMELDETEN SCHÜLER
+const flightsSection = document.createElement("div");
+flightsSection.className = "training-section";
+box.appendChild(flightsSection);
+
 const groupFlightsInput = document.createElement("input");
 groupFlightsInput.type = "number";
 groupFlightsInput.min = "1";
@@ -1124,15 +1134,15 @@ groupFlightsInput.value = "1";
 groupFlightsInput.style.width = "80px";
 
 if (attending.length > 0) {
-  addText(box, "h4", "🪂 Flüge für alle erfassen");
-  box.appendChild(groupFlightsInput);
+  addText(flightsSection, "h4", "🪂 Flüge für alle erfassen");
+  flightsSection.appendChild(groupFlightsInput);
 }
 const groupFlightsButton = document.createElement("button");
 groupFlightsButton.textContent = "➕ Flüge für alle speichern";
 
 groupFlightsButton.disabled = attending.length === 0;
 
-box.appendChild(groupFlightsButton);
+flightsSection.appendChild(groupFlightsButton);
 groupFlightsButton.onclick = async () => {
   const count = Number(groupFlightsInput.value);
 
@@ -1178,6 +1188,16 @@ try {
 };
     
 // Nur angemeldete Schüler anzeigen
+const registrationsSection = document.createElement("div");
+registrationsSection.className = "training-section";
+box.appendChild(registrationsSection);
+
+addText(
+  registrationsSection,
+  "h4",
+  "👨‍🎓 Anmeldungen (" + attending.length + " Schüler)"
+);
+
 attending.forEach(student => {
   const row = document.createElement("div");
   row.className = "material";
@@ -1241,13 +1261,17 @@ row.appendChild(info);
 };
 
   row.appendChild(removeButton);
-  box.appendChild(row);
+  registrationsSection.appendChild(row);
 });
 
 // Weitere Schüler nur auf Wunsch anzeigen
 // MATERIAL FÜR DIESEN SCHULUNGSTAG
+const packingSection = document.createElement("div");
+packingSection.className = "training-section";
+box.insertBefore(packingSection, registrationsSection.nextSibling);
+
 const materialTitle = addText(
-  box, "h4", "🎒 Packliste für diesen Schulungstag"
+  packingSection, "h4", "🎒 Packliste"
 );
 
 const neededMaterials = materials.map((material, index) => {
@@ -1264,30 +1288,30 @@ const missingMaterials = neededMaterials.filter(
 
 if (attending.length === 0) {
   addText(
-    box, "p", "Noch keine Teilnehmer angemeldet."
+    packingSection, "p", "Noch keine Teilnehmer angemeldet."
   );
 } else if (missingMaterials.length === 0) {
   addText(
-    box, "p", "✅ Alle Teilnehmer haben eigenes Material."
+    packingSection, "p", "✅ Alle Teilnehmer haben eigenes Material."
   );
 } else {
   missingMaterials.forEach(item => {
     addText(
-      box,
+      packingSection,
       "p",
-materialSymbols[materials.indexOf(item.material)] +
-" " + item.material + ": " +
-item.count
+      materialSymbols[materials.indexOf(item.material)] +
+      " " + item.material + ": " +
+      item.count
     );
   });
 }
 const addButton = document.createElement("button");
 addButton.textContent = "+ Teilnehmer hinzufügen";
-box.appendChild(addButton);
+registrationsSection.appendChild(addButton);
 
 const selection = document.createElement("div");
 selection.hidden = true;
-box.appendChild(selection);
+registrationsSection.appendChild(selection);
 
 addButton.onclick = () => {
   selection.hidden = !selection.hidden;
