@@ -121,6 +121,30 @@ label {
   color: #64748b;
   font-size: 13px;
 }
+  .password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+
+.password-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  font-size: 20px;
+}
 </style>
 </head>
 <body>
@@ -147,22 +171,28 @@ label {
 
   <label>
     Passwort
-    <input id="loginPassword" type="password"
-           autocomplete="current-password">
-    
-    <button id="toggleLoginPassword" type="button">
-  👁️ Passwort anzeigen
-</button>
+   <div class="password-wrapper">
+  <input id="loginPassword" type="password"
+         autocomplete="current-password">
+
+  <button id="toggleLoginPassword" type="button"
+          class="password-eye" aria-label="Passwort anzeigen">
+    👁️
+  </button>
+</div>
   </label>
 <div id="newPasswordArea" style="display:none;">
   <label>
     Neues Passwort
-    <input id="newPassword" type="password"
-           autocomplete="new-password">
-    
-    <button id="toggleNewPassword" type="button">
-  👁️ Passwort anzeigen
-</button>
+ <div class="password-wrapper">
+  <input id="newPassword" type="password"
+         autocomplete="new-password">
+
+  <button id="toggleNewPassword" type="button"
+          class="password-eye" aria-label="Passwort anzeigen">
+    👁️
+  </button>
+</div>
   </label>
 
   <button id="saveNewPasswordBtn" type="button">
@@ -273,10 +303,10 @@ document.getElementById("toggleNewPassword").addEventListener(
 
     if (passwordField.type === "password") {
       passwordField.type = "text";
-      button.textContent = "🙈 Passwort verbergen";
+      button.textContent = "🙈";
     } else {
       passwordField.type = "password";
-      button.textContent = "👁️ Passwort anzeigen";
+      button.textContent = "👁️";
     }
   }
 );
