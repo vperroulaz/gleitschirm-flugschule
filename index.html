@@ -1358,6 +1358,14 @@ saveFlightButton.onclick = async () => {
   removeButton.title = "Vom Schulungstag abmelden";
 
  removeButton.onclick = async () => {
+    const confirmed = confirm(
+    "Möchtest du " + student.name +
+    " wirklich vom Schulungstag abmelden?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
   const updatedDay = {
     ...day,
     participants: day.participants.filter(
