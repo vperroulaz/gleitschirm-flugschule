@@ -704,7 +704,20 @@ save(student);
 };
 
 details.appendChild(plusButton);
+const minusButton = document.createElement("button");
+minusButton.textContent = "➖ 1 Flug";
+minusButton.style.background = "#64748b";
 
+minusButton.onclick = () => {
+  if (student.flights <= 0) return;
+
+  student.flights -= 1;
+  flightCount.textContent = student.flights + " Flüge";
+  save(student);
+  renderStudents();
+};
+
+details.appendChild(minusButton);
   const editButton = document.createElement("button");
   editButton.textContent = "✏️ Schüler bearbeiten";
   editButton.onclick = () => openEditor(id);
