@@ -149,12 +149,20 @@ label {
     Passwort
     <input id="loginPassword" type="password"
            autocomplete="current-password">
+    
+    <button id="toggleLoginPassword" type="button">
+  👁️ Passwort anzeigen
+</button>
   </label>
 <div id="newPasswordArea" style="display:none;">
   <label>
     Neues Passwort
     <input id="newPassword" type="password"
            autocomplete="new-password">
+    
+    <button id="toggleNewPassword" type="button">
+  👁️ Passwort anzeigen
+</button>
   </label>
 
   <button id="saveNewPasswordBtn" type="button">
@@ -257,7 +265,21 @@ const supabaseClient = window.supabase.createClient(
       "Bitte lege jetzt dein neues Passwort fest.";
   }
 }
+document.getElementById("toggleNewPassword").addEventListener(
+  "click",
+  function () {
+    const passwordField = document.getElementById("newPassword");
+    const button = document.getElementById("toggleNewPassword");
 
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      button.textContent = "🙈 Passwort verbergen";
+    } else {
+      passwordField.type = "password";
+      button.textContent = "👁️ Passwort anzeigen";
+    }
+  }
+);
 document.getElementById("saveNewPasswordBtn").addEventListener(
   "click",
   async function () {
@@ -494,6 +516,21 @@ function saveStudentToSupabase(student) {
     trainingDays = [];
     document.getElementById("loginMessage").textContent =
       "Du bist abgemeldet.";
+  }
+);
+  document.getElementById("toggleLoginPassword").addEventListener(
+  "click",
+  function () {
+    const passwordField = document.getElementById("loginPassword");
+    const button = document.getElementById("toggleLoginPassword");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      button.textContent = "🙈 Passwort verbergen";
+    } else {
+      passwordField.type = "password";
+      button.textContent = "👁️ Passwort anzeigen";
+    }
   }
 );
   document.getElementById("loginBtn").addEventListener(
