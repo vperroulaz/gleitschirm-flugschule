@@ -557,9 +557,19 @@ const missing = materials.filter(
   (_, index) => !student.material[index]
 );
 
+const needsWeight =
+  missing.includes("Gleitschirm") ||
+  missing.includes("Gurtzeug");
+
+const weightInfo = needsWeight
+  ? " · ⚖️ " + (student.weight == null
+      ? "Gewicht nicht eingetragen"
+      : student.weight + " kg")
+  : "";
+
 const materialStatus = missing.length === 0
   ? "✅ Alles vorhanden"
-  : "🎒 Material nötig: " + missing.join(", ");
+  : "🎒 Material nötig: " + missing.join(", ") + weightInfo;
 
 button.replaceChildren();
 
