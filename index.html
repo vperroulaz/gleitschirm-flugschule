@@ -731,7 +731,7 @@ function addText(parent, tag, value) {
 }
 
 function renderStudents() {
-  $("students").replaceChildren();
+$("students").replaceChildren();
 
   students.forEach(student => {
     const button = document.createElement("button");
@@ -1117,6 +1117,7 @@ materialSummary.textContent = needed.length > 0
       student.material[index] = checkbox.checked;
       save(student);
       updateMissing();
+      renderStudents();
       renderTrainingDays();
     };
 
