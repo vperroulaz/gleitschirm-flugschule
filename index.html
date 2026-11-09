@@ -828,6 +828,34 @@ closeButton.onclick = () => {
   details.hidden = true;
   details.replaceChildren();
   selectedId = null;
+
+  // Zurück zum ursprünglichen Schulungstag
+  if (window.lastTrainingDayId) {
+    const dayBox = [...document.querySelectorAll(
+      "#trainingDays details[data-day-id]"
+    )].find(
+      element => element.dataset.dayId === window.lastTrainingDayId
+    );
+
+    if (dayBox) {
+      dayBox.open = true;
+
+  const registrations = [...dayBox.querySelectorAll(
+  ".training-section"
+)].find(section =>
+  section.querySelector("h4")?.textContent.includes("Anmeldungen")
+);
+
+      requestAnimationFrame(() => {
+        (registrations || dayBox).scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+    }
+
+    window.lastTrainingDayId = null;
+  }
 };
 
 details.appendChild(closeButton);
@@ -1162,7 +1190,10 @@ info.style.flex = "1";
 
 const nameButton = document.createElement("button");
 nameButton.textContent = "👨‍🎓 " + student.name;
-nameButton.onclick = () => showStudent(student.id);
+nameButton.onclick = () => {
+  showStudent(student.id);
+  window.lastTrainingDayId = String(day.id);
+};
 info.appendChild(nameButton);
 
 const infoLine = document.createElement("div");
