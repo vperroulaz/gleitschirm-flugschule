@@ -1117,6 +1117,7 @@ materialSummary.textContent = needed.length > 0
       student.material[index] = checkbox.checked;
       save(student);
       updateMissing();
+      renderTrainingDays();
     };
 
     label.appendChild(checkbox);
