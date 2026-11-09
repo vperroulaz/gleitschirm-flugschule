@@ -886,16 +886,7 @@ save();
   details.hidden = false;
 }
 // SCHULUNGSTAGE SPEICHERN
-const trainingDaysKey = "gleitschirm-training-days-v1";
-
-let trainingDays;
-
-try {
-  const saved = JSON.parse(localStorage.getItem(trainingDaysKey));
-  trainingDays = Array.isArray(saved) ? saved : [];
-} catch {
-  trainingDays = [];
-}
+let trainingDays = [];
 
 function saveTrainingDays() {
   try {
