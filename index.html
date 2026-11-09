@@ -126,6 +126,10 @@ label {
 <body>
 
 <header>
+<button id="logoutBtn" type="button"
+        style="display:none; position:absolute; top:10px; right:10px; width:auto; padding:6px 10px; font-size:12px;">
+  Abmelden
+</button>
   <h1>🪂 Gleitschirm Flugschule</h1>
   <p>Schülerverwaltung</p>
 </header>
@@ -165,9 +169,6 @@ label {
     Die Anmeldung wird gerade eingerichtet.
   </p>
   </div>
-    <button id="logoutBtn" type="button" style="display:none;">
-  Abmelden
-</button>
 </section>
 <div id="protectedArea" style="display:none;">
   <details class="card" id="studentOverview">
@@ -300,6 +301,7 @@ renderTrainingDays();
   return;
 }
     document.getElementById("loginFields").style.display = "none";
+    document.getElementById("loginArea").style.display = "none";
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     document.getElementById("loginMessage").textContent =
@@ -439,6 +441,7 @@ function saveStudentToSupabase(student) {
     document.getElementById("protectedArea").style.display = "none";
     document.getElementById("logoutBtn").style.display = "none";
     document.getElementById("loginFields").style.display = "block";
+    document.getElementById("loginArea").style.display = "block";
     students = [];
     trainingDays = [];
     document.getElementById("loginMessage").textContent =
@@ -468,6 +471,7 @@ function saveStudentToSupabase(student) {
 
     message.textContent = "Erfolgreich angemeldet!";
     document.getElementById("loginFields").style.display = "none";
+    document.getElementById("loginArea").style.display = "none";
     document.getElementById("protectedArea").style.display = "block";
     document.getElementById("logoutBtn").style.display = "inline-block";
     testSupabaseConnection();
