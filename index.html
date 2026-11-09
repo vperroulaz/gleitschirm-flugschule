@@ -343,7 +343,7 @@ checkExistingLogin();
   }
 }
   async function deleteStudentFromSupabase(student) {
-      const id = getSupabaseStudentId(student.id);
+      const id = student.id;
   const pendingSave = studentSaveQueues.get(id);
 
   if (pendingSave) {
@@ -359,14 +359,14 @@ checkExistingLogin();
   const { error } = await supabaseClient
     .from("students")
     .delete()
-    .eq("id", getSupabaseStudentId(student.id));
+    .eq("id", student.id);
 
   if (error) throw error;
 }
  const studentSaveQueues = new Map();
   const deletingStudentIds = new Set();
 function saveStudentToSupabase(student) {
-  const id = getSupabaseStudentId(student.id);
+  const id = student.id;
     if (deletingStudentIds.has(id)) {
     return Promise.reject(
       new Error("Dieser Schüler wird gerade gelöscht.")
@@ -410,9 +410,7 @@ function saveStudentToSupabase(student) {
 
   return current;
 }
-function getSupabaseStudentId(id) {
-  return id;
-}
+
   async function testSupabaseConnection() {
   const { data, error } = await supabaseClient
     .from("students")
@@ -690,7 +688,7 @@ deleteButton.onclick = async () => {
   if (!confirmed) return;
   if (deleteButton.disabled) return;
 deleteButton.disabled = true;
-  deletingStudentIds.add(getSupabaseStudentId(student.id));
+deletingStudentIds.add(student.id);
   try {
     await deleteStudentFromSupabase(student);
  } catch (error) {
@@ -698,7 +696,7 @@ deleteButton.disabled = true;
     deleteButton.disabled = false;
   return;
 } finally {
-  deletingStudentIds.delete(getSupabaseStudentId(student.id));
+  deletingStudentIds.delete(student.id);
 }
   students = students.filter(s => s.id !== student.id);
   save();
