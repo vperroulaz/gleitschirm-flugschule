@@ -976,10 +976,40 @@ attending.forEach(student => {
   const row = document.createElement("div");
   row.className = "material";
 
-  const nameButton = document.createElement("button");
-  nameButton.textContent = "👨‍🎓 " + student.name;
-  nameButton.onclick = () => showStudent(student.id);
-  row.appendChild(nameButton);
+  const info = document.createElement("div");
+info.style.flex = "1";
+
+const nameButton = document.createElement("button");
+nameButton.textContent = "👨‍🎓 " + student.name;
+nameButton.onclick = () => showStudent(student.id);
+info.appendChild(nameButton);
+
+const infoLine = document.createElement("div");
+infoLine.style.fontSize = "13px";
+infoLine.style.marginTop = "5px";
+
+infoLine.textContent =
+  "🪂 " + student.flights + " Flüge · " +
+  "⚖️ " + (student.weight == null
+    ? "Gewicht fehlt"
+    : student.weight + " kg");
+
+info.appendChild(infoLine);
+
+const missingForStudent = materials.filter(
+  (_, index) => !student.material[index]
+);
+
+const materialLine = document.createElement("div");
+materialLine.style.fontSize = "13px";
+materialLine.style.marginTop = "4px";
+
+materialLine.textContent = missingForStudent.length === 0
+  ? "✅ Material vollständig"
+  : "🎒 Fehlt: " + missingForStudent.join(", ");
+
+info.appendChild(materialLine);
+row.appendChild(info);
 
   const removeButton = document.createElement("button");
   removeButton.textContent = "✕";
