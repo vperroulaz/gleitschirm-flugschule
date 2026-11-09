@@ -807,8 +807,19 @@ function showStudent(id) {
   const student = students.find(s => s.id === id);
   if (!student) return;
 
- const details = $("details");
+const details = $("details");
+$("studentOverview").open = true;
+details.hidden = false;
+  
+requestAnimationFrame(() => {
+  details.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
 details.replaceChildren();
+
 const closeButton = document.createElement("button");
 closeButton.textContent = "✕ Schliessen";
 closeButton.style.background = "#64748b";
