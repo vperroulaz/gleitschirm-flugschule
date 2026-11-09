@@ -171,15 +171,24 @@ label {
     border-radius: 10px;
   }
 
+  .registration-flight-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
     .registration-flight-input {
     width: 80px !important;
     box-sizing: border-box;
   }
-    .registration-save-button {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-  }
+   .registration-save-button {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  box-sizing: border-box;
+  padding: 12px 8px;
+}
   .registration-remove-button {
   position: absolute;
   top: 12px;
@@ -1282,17 +1291,20 @@ flightInput.title = "Neue Flüge für " + student.name;
 flightInput.style.width = "65px";
 flightInput.classList.add("registration-flight-input");
 
-row.appendChild(flightInput);
+const flightControls = document.createElement("div");
+flightControls.classList.add("registration-flight-controls");
+flightControls.appendChild(flightInput);
+row.appendChild(flightControls);
 
 const saveFlightButton = document.createElement("button");
 saveFlightButton.textContent = "Flüge speichern";
 saveFlightButton.classList.add("registration-save-button");
-row.appendChild(saveFlightButton);
+flightControls.appendChild(saveFlightButton);
 const savedMessage = document.createElement("span");
 savedMessage.textContent = "✅ Gespeichert";
 savedMessage.style.color = "#16a34a";
 savedMessage.hidden = true;
-row.appendChild(savedMessage);
+flightControls.appendChild(savedMessage);
 saveFlightButton.onclick = async () => {
   const additionalFlights = Number(flightInput.value);
 
