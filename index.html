@@ -853,7 +853,9 @@ save();
   addText(details, "p",
   "Bemerkungen werden automatisch in Supabase gespeichert."
   ).className = "small";
-
+const bottomCloseButton = closeButton.cloneNode(true);
+bottomCloseButton.onclick = closeButton.onclick;
+details.appendChild(bottomCloseButton);
   details.hidden = false;
 }
 // SCHULUNGSTAGE SPEICHERN
