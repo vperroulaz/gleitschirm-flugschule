@@ -983,7 +983,70 @@ info.className = "small";
 const attending = students.filter(
   student => day.participants.includes(student.id)
 );
+    
+// GEMEINSAME FLUGERFASSUNG FÜR ALLE ANGEMELDETEN SCHÜLER
+const groupFlightsInput = document.createElement("input");
+groupFlightsInput.type = "number";
+groupFlightsInput.min = "1";
+groupFlightsInput.max = "100";
+groupFlightsInput.step = "1";
+groupFlightsInput.value = "1";
+groupFlightsInput.style.width = "80px";
 
+if (attending.length > 0) {
+  addText(box, "h4", "🪂 Flüge für alle erfassen");
+  box.appendChild(groupFlightsInput);
+}
+const groupFlightsButton = document.createElement("button");
+groupFlightsButton.textContent = "➕ Flüge für alle speichern";
+
+groupFlightsButton.disabled = attending.length === 0;
+
+box.appendChild(groupFlightsButton);
+groupFlightsButton.onclick = async () => {
+  const count = Number(groupFlightsInput.value);
+
+  if (!Number.isInteger(count) || count < 1 || count > 100) {
+    alert("Bitte eine gültige Anzahl zwischen 1 und 100 eingeben.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "Wirklich +" + count + " Flüge für alle " +
+    attending.length + " angemeldeten Schüler erfassen?\n\n" +
+    "Diese Flüge werden zu den bisherigen Flugzahlen addiert."
+  );
+
+  if (!confirmed) return;
+
+groupFlightsButton.disabled = true;
+
+try {
+ for (const student of attending) {
+  const updatedStudent = {
+    ...student,
+    flights: student.flights + count
+  };
+
+  await saveStudentToSupabase(updatedStudent);
+  student.flights = updatedStudent.flights;
+}
+
+  renderStudents();
+  groupFlightsInput.value = "1";
+  renderTrainingDays();
+  alert("Flüge wurden für alle angemeldeten Schüler gespeichert.");
+} catch (error) {
+  console.error("Gemeinsame Flugerfassung fehlgeschlagen:", error);
+  renderStudents();
+  renderTrainingDays();
+  alert(
+    "Nicht alle Flüge konnten gespeichert werden. " +
+    "Bitte die Flugzahlen prüfen, bevor du es erneut versuchst."
+  );
+}
+};
+    
 // Nur angemeldete Schüler anzeigen
 attending.forEach(student => {
   const row = document.createElement("div");
