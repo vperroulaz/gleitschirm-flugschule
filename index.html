@@ -908,7 +908,7 @@ const sortedDays = [...visibleTrainingDays].sort(
   );
 
   sortedDays.forEach(day => {
-    const box = document.createElement("div");
+    const box = document.createElement("details");
     box.className = "maneuver";
 
     const dateText = new Date(
@@ -920,7 +920,13 @@ const sortedDays = [...visibleTrainingDays].sort(
       year: "numeric"
     });
 
-    addText(box, "strong", "📅 " + dateText);
+const summary = document.createElement("summary");
+summary.textContent =
+  "📅 " + dateText + " · 👨‍🎓 " +
+  day.participants.length + " angemeldet";
+summary.style.fontWeight = "bold";
+summary.style.cursor = "pointer";
+box.appendChild(summary);
 const deleteDayButton = document.createElement("button");
 deleteDayButton.textContent = "🗑️ Schulungstag löschen";
 deleteDayButton.style.background = "#dc2626";
@@ -963,12 +969,6 @@ info.className = "small";
 
 const attending = students.filter(
   student => day.participants.includes(student.id)
-);
-
-addText(
-  box,
-  "p",
-  "👨‍🎓 " + attending.length + " Schüler angemeldet"
 );
 
 // Nur angemeldete Schüler anzeigen
