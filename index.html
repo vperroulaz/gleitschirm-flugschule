@@ -410,14 +410,8 @@ function saveStudentToSupabase(student) {
 
   return current;
 }
-  function getSupabaseStudentId(id) {
-  const demoIds = {
-    "demo-1": "00000000-0000-4000-8000-000000000001",
-    "demo-2": "00000000-0000-4000-8000-000000000002",
-    "demo-3": "00000000-0000-4000-8000-000000000003"
-  };
-
-  return demoIds[id] || id;
+function getSupabaseStudentId(id) {
+  return id;
 }
   async function testSupabaseConnection() {
   const { data, error } = await supabaseClient
