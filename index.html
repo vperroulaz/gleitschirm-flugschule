@@ -1007,48 +1007,6 @@ details.appendChild(deleteButton);
 
   updateProgress();
 
-  // MATERIAL
-  addText(details, "h3", "🎒 Materialverwaltung");
-  addText(details, "p",
-    "Häkchen setzen, wenn eigenes Material vorhanden ist:");
-
-  const missing = document.createElement("div");
-  missing.className = "notice";
-
-  function updateMissing() {
-    const needed = materials.filter(
-      (_, index) => !student.material[index]
-    );
-
-    missing.textContent = needed.length
-      ? "🎒 Flugschule muss mitbringen: " + needed.join(", ")
-      : "✅ Alles eigene Material vorhanden!";
-  }
-
-  materials.forEach((material, index) => {
-    const label = document.createElement("label");
-    label.className = "material";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = student.material[index];
-
-    checkbox.onchange = () => {
-      student.material[index] = checkbox.checked;
-      save(student);
-      updateMissing();
-      renderStudents();
-      renderTrainingDays();
-    };
-
-    label.appendChild(checkbox);
-    addText(label, "span", material + " – eigenes Material");
-    details.appendChild(label);
-  });
-
-  details.appendChild(missing);
-  updateMissing();
-
   // BEMERKUNGEN
   addText(details, "h3", "📝 Bemerkungen");
 
@@ -1074,6 +1032,63 @@ save();
   addText(details, "p",
   "Bemerkungen werden automatisch in Supabase gespeichert."
   ).className = "small";
+
+// MATERIAL
+const materialSection = document.createElement("details");
+details.appendChild(materialSection);
+
+const materialSummary = document.createElement("summary");
+materialSummary.textContent = "🎒 Materialverwaltung";
+materialSummary.style.fontWeight = "bold";
+materialSummary.style.cursor = "pointer";
+materialSection.appendChild(materialSummary);
+  
+ addText(materialSection, "p",
+  "Häkchen setzen, wenn eigenes Material vorhanden ist:");
+
+  const missing = document.createElement("div");
+  missing.className = "notice";
+
+  function updateMissing() {
+    const needed = materials.filter(
+      (_, index) => !student.material[index]
+    );
+
+missing.textContent = needed.length
+      ? "🎒 Flugschule muss mitbringen: " + needed.join(", ")
+      : "✅ Alles eigene Material vorhanden!";
+
+materialSummary.textContent = needed.length > 0
+  ? "🎒 Materialverwaltung"
+  : "✅ Alles eigene Material vorhanden!";
+    
+materialSection.open = needed.length > 0;
+  }
+
+  materials.forEach((material, index) => {
+    const label = document.createElement("label");
+    label.className = "material";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = student.material[index];
+
+    checkbox.onchange = () => {
+      student.material[index] = checkbox.checked;
+      save(student);
+      updateMissing();
+      renderStudents();
+      renderTrainingDays();
+    };
+
+    label.appendChild(checkbox);
+    addText(label, "span", material + " – eigenes Material");
+    materialSection.appendChild(label);
+  });
+
+ materialSection.appendChild(missing);
+  updateMissing();
+  
 const bottomCloseButton = closeButton.cloneNode(true);
 bottomCloseButton.onclick = closeButton.onclick;
 details.appendChild(bottomCloseButton);
