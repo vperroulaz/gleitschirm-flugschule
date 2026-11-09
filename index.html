@@ -1331,17 +1331,48 @@ addButton.onclick = () => {
     : "Auswahl schliessen";
 };
 
+// Hier sammeln wir die ausgewählten Schüler
+const selectedParticipants = new Set();
+
 students
   .filter(student => !day.participants.includes(student.id))
   .forEach(student => {
-    const button = document.createElement("button");
+    const button = document.createElement("label");
     button.className = "student";
-    button.textContent = "+ " + student.name;
 
-  button.onclick = async () => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    button.appendChild(checkbox);
+    button.appendChild(
+      document.createTextNode(" " + student.name)
+    );
+
+ checkbox.onchange = () => {
+  if (checkbox.checked) {
+    selectedParticipants.add(student.id);
+  } else {
+    selectedParticipants.delete(student.id);
+  }
+};
+
+    selection.appendChild(button);
+  });
+
+   const saveParticipantsButton = document.createElement("button");
+saveParticipantsButton.textContent = "✅ Ausgewählte Teilnehmer anmelden";
+
+saveParticipantsButton.onclick = async () => {
+  if (selectedParticipants.size === 0) {
+    alert("Bitte zuerst mindestens einen Schüler auswählen.");
+    return;
+  }
+
   const updatedDay = {
     ...day,
-    participants: [...day.participants, student.id]
+    participants: [
+      ...new Set([...day.participants, ...selectedParticipants])
+    ]
   };
 
   try {
@@ -1349,15 +1380,12 @@ students
     day.participants = updatedDay.participants;
     renderTrainingDays();
   } catch (error) {
-    console.error("Teilnehmer konnte nicht angemeldet werden:", error);
+    console.error("Teilnehmer konnten nicht angemeldet werden:", error);
     alert("Änderung konnte nicht in Supabase gespeichert werden.");
   }
 };
 
-    selection.appendChild(button);
-  });
-
-
+selection.appendChild(saveParticipantsButton);
 
     container.appendChild(box);
   });
