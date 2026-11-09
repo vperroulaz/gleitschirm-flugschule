@@ -888,17 +888,6 @@ save();
 // SCHULUNGSTAGE SPEICHERN
 let trainingDays = [];
 
-function saveTrainingDays() {
-  try {
-    localStorage.setItem(
-      trainingDaysKey,
-      JSON.stringify(trainingDays)
-    );
-  } catch {
-    alert("Schulungstage konnten nicht gespeichert werden.");
-  }
-}
-
 function renderTrainingDays() {
     // Vergangene Schulungstage automatisch löschen
   const today = new Date();
