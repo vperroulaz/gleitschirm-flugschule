@@ -890,21 +890,21 @@ save();
 let trainingDays = [];
 
 function renderTrainingDays() {
-    // Vergangene Schulungstage automatisch löschen
+    // Vergangene Schulungstage nur ausblenden, nicht löschen
   const today = new Date();
   const todayString =
     today.getFullYear() + "-" +
     String(today.getMonth() + 1).padStart(2, "0") + "-" +
     String(today.getDate()).padStart(2, "0");
 
- trainingDays = trainingDays.filter(
+const visibleTrainingDays = trainingDays.filter(
   day => day.date >= todayString
 );
   
   const container = $("trainingDays");
   container.replaceChildren();
 
-  const sortedDays = [...trainingDays].sort(
+const sortedDays = [...visibleTrainingDays].sort(
     (a, b) => a.date.localeCompare(b.date)
   );
 
