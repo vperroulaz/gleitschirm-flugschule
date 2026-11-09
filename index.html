@@ -157,6 +157,34 @@ label {
   margin-top: 0;
   margin-bottom: 14px;
 }
+@media (max-width: 600px) {
+  .registration-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+
+    .registration-flight-input {
+    width: 80px !important;
+    box-sizing: border-box;
+  }
+    .registration-save-button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+  }
+  .registration-remove-button {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+}
 </style>
 </head>
 <body>
@@ -1237,6 +1265,8 @@ materialLine.textContent = missingForStudent.length === 0
 info.appendChild(materialLine);
 row.appendChild(info);
 
+row.classList.add("registration-row");
+
 // Fluganzahl für diesen Schüler eingeben
 const flightInput = document.createElement("input");
 flightInput.type = "number";
@@ -1246,11 +1276,13 @@ flightInput.value = "0";
 flightInput.placeholder = "";
 flightInput.title = "Neue Flüge für " + student.name;
 flightInput.style.width = "65px";
+flightInput.classList.add("registration-flight-input");
 
 row.appendChild(flightInput);
 
 const saveFlightButton = document.createElement("button");
 saveFlightButton.textContent = "Flüge speichern";
+saveFlightButton.classList.add("registration-save-button");
 row.appendChild(saveFlightButton);
 const savedMessage = document.createElement("span");
 savedMessage.textContent = "✅ Gespeichert";
@@ -1306,6 +1338,7 @@ saveFlightButton.onclick = async () => {
   const removeButton = document.createElement("button");
   removeButton.textContent = "✕";
   removeButton.style.background = "#dc2626";
+  removeButton.classList.add("registration-remove-button");
   removeButton.title = "Vom Schulungstag abmelden";
 
  removeButton.onclick = async () => {
