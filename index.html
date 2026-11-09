@@ -1055,16 +1055,27 @@ const visibleTrainingDays = trainingDays.filter(
   day => day.date >= todayString
 );
   
-  const container = $("trainingDays");
-  container.replaceChildren();
+const container = $("trainingDays");
+
+// Merken, welche Schulungstage geöffnet sind
+const openTrainingDays = new Set(
+  [...container.querySelectorAll("details[open]")]
+    .map(element => element.dataset.dayId)
+);
+
+container.replaceChildren();
 
 const sortedDays = [...visibleTrainingDays].sort(
     (a, b) => a.date.localeCompare(b.date)
   );
 
-  sortedDays.forEach(day => {
-    const box = document.createElement("details");
-    box.className = "maneuver";
+ sortedDays.forEach(day => {
+  const box = document.createElement("details");
+  box.className = "maneuver";
+
+  // Geöffneten Zustand wiederherstellen
+  box.dataset.dayId = String(day.id);
+  box.open = openTrainingDays.has(String(day.id));
 
     const dateText = new Date(
       day.date + "T12:00:00"
