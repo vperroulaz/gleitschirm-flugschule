@@ -1253,8 +1253,8 @@ const flightInput = document.createElement("input");
 flightInput.type = "number";
 flightInput.min = "0";
 flightInput.step = "1";
-flightInput.value = "";
-flightInput.placeholder = "Flüge";
+flightInput.value = "0";
+flightInput.placeholder = "";
 flightInput.title = "Neue Flüge für " + student.name;
 flightInput.style.width = "65px";
 
@@ -1272,12 +1272,12 @@ saveFlightButton.onclick = async () => {
   const additionalFlights = Number(flightInput.value);
 
   if (
-    !Number.isInteger(additionalFlights) ||
-    additionalFlights <= 0
-  ) {
-    alert("Bitte eine gültige Flugzahl grösser als 0 eingeben.");
-    return;
-  }
+  !Number.isInteger(additionalFlights) ||
+  additionalFlights < 0
+) {
+  alert("Bitte eine gültige Flugzahl ab 0 eingeben.");
+  return;
+}
 
     if (saveFlightButton.disabled) {
     return;
