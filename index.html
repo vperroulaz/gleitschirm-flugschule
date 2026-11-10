@@ -215,7 +215,8 @@ label {
   <section class="card" id="loginArea">
   <h2>🔒 Fluglehrer-Anmeldung</h2>
   <div id="loginFields">
-    
+
+  <div id="normalLoginFields">
   <label>
     E-Mail-Adresse
     <input id="loginEmail" type="email"
@@ -234,6 +235,7 @@ label {
   </button>
 </div>
   </label>
+</div>
 <div id="newPasswordArea" style="display:none;">
   <label>
     Neues Passwort
@@ -252,6 +254,7 @@ label {
     Neues Passwort speichern
   </button>
 </div>
+<div id="normalLoginButtons">
   <button id="loginBtn" type="button">
     Anmelden
   </button>
@@ -259,7 +262,8 @@ label {
   <button id="forgotPasswordBtn" type="button">
   🔑 Passwort vergessen?
 </button>
-
+</div>
+    
   <p id="loginMessage" class="small">
     Die Anmeldung wird gerade eingerichtet.
   </p>
@@ -350,8 +354,16 @@ const supabaseClient = window.supabase.createClient(
     document.getElementById("loginFields").style.display = "block";
     document.getElementById("protectedArea").style.display = "none";
     document.getElementById("newPasswordArea").style.display = "block";
+    document.getElementById("normalLoginFields").style.display = "none";
+    document.getElementById("normalLoginButtons").style.display = "none";
     document.getElementById("loginMessage").textContent =
       "Bitte lege jetzt dein neues Passwort fest.";
+  } else if (
+    !data.session &&
+    window.location.hash.includes("type=invite")
+  ) {
+    document.getElementById("loginMessage").textContent =
+      "Der Einladungslink ist ungültig oder abgelaufen. Bitte fordere eine neue Einladung an.";
   }
 }
 document.getElementById("toggleNewPassword").addEventListener(
@@ -392,7 +404,10 @@ document.getElementById("saveNewPasswordBtn").addEventListener(
 
     document.getElementById("newPassword").value = "";
     document.getElementById("newPasswordArea").style.display = "none";
+    document.getElementById("normalLoginFields").style.display = "block";
+    document.getElementById("normalLoginButtons").style.display = "block";
     passwordRecoveryActive = false;
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
     const { error: signOutError } = await supabaseClient.auth.signOut();
 
 if (signOutError) {
@@ -416,10 +431,13 @@ if (signOutError) {
 
 let passwordRecoveryActive = false;
 
-supabaseClient.auth.onAuthStateChange((event) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
   if (
-    event === "PASSWORD_RECOVERY" ||
-    window.location.hash.includes("type=invite")
+    session &&
+    (
+      event === "PASSWORD_RECOVERY" ||
+      window.location.hash.includes("type=invite")
+    )
   ) {
     passwordRecoveryActive = true;
 
@@ -427,6 +445,8 @@ supabaseClient.auth.onAuthStateChange((event) => {
     document.getElementById("loginArea").style.display = "block";
     document.getElementById("protectedArea").style.display = "none";
     document.getElementById("newPasswordArea").style.display = "block";
+    document.getElementById("normalLoginFields").style.display = "none";
+    document.getElementById("normalLoginButtons").style.display = "none";
 
     document.getElementById("loginMessage").textContent =
       "Bitte lege jetzt dein neues Passwort fest.";
@@ -434,11 +454,7 @@ supabaseClient.auth.onAuthStateChange((event) => {
 });
 
   async function checkExistingLogin() {
-  if (
-    passwordRecoveryActive ||
-    window.location.hash.includes("type=recovery") ||
-    window.location.hash.includes("type=invite")
-  ) return;
+ if (passwordRecoveryActive) return;
     
   const { data, error } = await supabaseClient.auth.getUser();
     
@@ -469,15 +485,11 @@ renderTrainingDays();
 }
 
 checkPasswordRecovery().then(() => {
-  if (
-    !passwordRecoveryActive &&
-    document.getElementById("newPasswordArea").style.display !== "block" &&
-    !window.location.hash.includes("type=recovery") &&
-    !window.location.hash.includes("type=invite")
-  ) {
+  if (!passwordRecoveryActive) {
     checkExistingLogin();
   }
 });
+  
   async function loadStudentsFromSupabase() {
   const { data, error } = await supabaseClient
     .from("students")
