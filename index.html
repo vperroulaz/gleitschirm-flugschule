@@ -325,14 +325,18 @@ label {
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+  const invitationLinkOpened =
+  window.location.hash.includes("type=invite") ||
+  window.location.search.includes("type=invite");
+  
   const supabaseUrl = "https://gsfgefnmdhpaupsajjhp.supabase.co";
-
-const supabaseKey = "sb_publishable_Iyi6I57SzKLCv0xpXWrPXA_WGPx-VdR";
+  const supabaseKey = "sb_publishable_Iyi6I57SzKLCv0xpXWrPXA_WGPx-VdR";
 
 const supabaseClient = window.supabase.createClient(
   supabaseUrl,
   supabaseKey
 );
+  
   async function checkPasswordRecovery() {
   const { data, error } = await supabaseClient.auth.getSession();
 
@@ -346,7 +350,7 @@ const supabaseClient = window.supabase.createClient(
   data.session &&
   (
     window.location.hash.includes("type=recovery") ||
-    window.location.hash.includes("type=invite")
+    invitationLinkOpened
   )
 ) {
     passwordRecoveryActive = true;
@@ -441,7 +445,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     session &&
     (
       event === "PASSWORD_RECOVERY" ||
-      window.location.hash.includes("type=invite")
+      invitationLinkOpened
     )
   ) {
     passwordRecoveryActive = true;
