@@ -345,7 +345,26 @@ const supabaseClient = window.supabase.createClient(
       "Fehler bei der Anmeldung: " + error.message;
     return;
   }
+    if (data.session && !invitationLinkOpened) {
+    const { data: profile } = await supabaseClient
+      .from("profiles")
+      .select("setup_completed")
+      .eq("id", data.session.user.id)
+      .maybeSingle();
 
+    if (profile && profile.setup_completed === false) {
+      passwordRecoveryActive = true;
+      document.getElementById("loginArea").style.display = "block";
+      document.getElementById("loginFields").style.display = "block";
+      document.getElementById("protectedArea").style.display = "none";
+      document.getElementById("newPasswordArea").style.display = "block";
+      document.getElementById("normalLoginFields").style.display = "none";
+      document.getElementById("normalLoginButtons").style.display = "none";
+      document.getElementById("loginMessage").textContent =
+        "Bitte lege zuerst dein Passwort fest.";
+      return;
+    }
+  }
   if (
   data.session &&
   (
@@ -408,7 +427,7 @@ document.getElementById("saveNewPasswordBtn").addEventListener(
         "Fehler: " + error.message;
       return;
     }
-
+    
     document.getElementById("newPassword").value = "";
     document.getElementById("newPasswordArea").style.display = "none";
     document.getElementById("normalLoginFields").style.display = "block";
@@ -470,6 +489,24 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
   if (passwordRecoveryActive) return;
     
   if (!error && data.user) {
+        const { data: profile, error: profileError } = await supabaseClient
+      .from("profiles")
+      .select("setup_completed")
+      .eq("id", data.user.id)
+      .maybeSingle();
+
+    if (profileError || !profile || profile.setup_completed !== true) {
+      passwordRecoveryActive = true;
+      document.getElementById("loginArea").style.display = "block";
+      document.getElementById("loginFields").style.display = "block";
+      document.getElementById("protectedArea").style.display = "none";
+      document.getElementById("newPasswordArea").style.display = "block";
+      document.getElementById("normalLoginFields").style.display = "none";
+      document.getElementById("normalLoginButtons").style.display = "none";
+      document.getElementById("loginMessage").textContent =
+        "Bitte lege zuerst dein Passwort fest.";
+      return;
+    }
     try {
   const supabaseStudents = await loadStudentsFromSupabase();
 
