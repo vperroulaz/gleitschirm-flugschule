@@ -360,7 +360,10 @@ const supabaseClient = window.supabase.createClient(
       "Bitte lege jetzt dein neues Passwort fest.";
   } else if (
     !data.session &&
-    window.location.hash.includes("type=invite")
+    (
+      window.location.hash.includes("type=invite") ||
+      window.location.hash.includes("error=")
+    )
   ) {
     document.getElementById("loginMessage").textContent =
       "Der Einladungslink ist ungültig oder abgelaufen. Bitte fordere eine neue Einladung an.";
@@ -432,6 +435,8 @@ if (signOutError) {
 let passwordRecoveryActive = false;
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
+  console.log("Supabase Auth-Ereignis:", event);
+  
   if (
     session &&
     (
