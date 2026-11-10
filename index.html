@@ -338,7 +338,13 @@ const supabaseClient = window.supabase.createClient(
     return;
   }
 
-  if (data.session && window.location.hash.includes("type=recovery")) {
+  if (
+  data.session &&
+  (
+    window.location.hash.includes("type=recovery") ||
+    window.location.hash.includes("type=invite")
+  )
+) {
     passwordRecoveryActive = true;
     document.getElementById("loginArea").style.display = "block";
     document.getElementById("loginFields").style.display = "block";
@@ -411,7 +417,10 @@ if (signOutError) {
 let passwordRecoveryActive = false;
 
 supabaseClient.auth.onAuthStateChange((event) => {
-  if (event === "PASSWORD_RECOVERY") {
+  if (
+    event === "PASSWORD_RECOVERY" ||
+    window.location.hash.includes("type=invite")
+  ) {
     passwordRecoveryActive = true;
 
     document.getElementById("loginFields").style.display = "block";
@@ -425,7 +434,11 @@ supabaseClient.auth.onAuthStateChange((event) => {
 });
 
   async function checkExistingLogin() {
-      if (passwordRecoveryActive || window.location.hash.includes("type=recovery")) return;
+  if (
+    passwordRecoveryActive ||
+    window.location.hash.includes("type=recovery") ||
+    window.location.hash.includes("type=invite")
+  ) return;
     
   const { data, error } = await supabaseClient.auth.getUser();
     
@@ -456,11 +469,14 @@ renderTrainingDays();
 }
 
 checkPasswordRecovery().then(() => {
-if (!passwordRecoveryActive &&
+  if (
+    !passwordRecoveryActive &&
     document.getElementById("newPasswordArea").style.display !== "block" &&
-    !window.location.hash.includes("type=recovery")) {
-  checkExistingLogin();
-}
+    !window.location.hash.includes("type=recovery") &&
+    !window.location.hash.includes("type=invite")
+  ) {
+    checkExistingLogin();
+  }
 });
   async function loadStudentsFromSupabase() {
   const { data, error } = await supabaseClient
