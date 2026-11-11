@@ -1331,7 +1331,7 @@ participantsLine.textContent =
   "👨‍🎓 " + day.participants.length + " angemeldet";
 
 if (window.matchMedia("(max-width: 600px)").matches) {
-  dateLine.style.display = "block";
+  dateLine.style.display = "inline";
   participantsLine.style.display = "block";
   participantsLine.style.marginTop = "6px";
   box.style.marginBottom = "20px";
@@ -1343,6 +1343,7 @@ summary.appendChild(dateLine);
 summary.appendChild(participantsLine);
 summary.style.fontWeight = "bold";
 summary.style.cursor = "pointer";
+summary.style.listStylePosition = "inside";
 box.appendChild(summary);
 const deleteDayButton = document.createElement("button");
 deleteDayButton.textContent = "🗑️ Schulungstag löschen";
