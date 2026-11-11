@@ -1301,6 +1301,9 @@ const sortedDays = [...visibleTrainingDays].sort(
     (a, b) => a.date.localeCompare(b.date)
   );
 
+if (window.matchMedia("(max-width: 600px)").matches) {
+  container.style.paddingTop = "20px";
+}
  sortedDays.forEach(day => {
   const box = document.createElement("details");
   box.className = "maneuver";
@@ -1319,9 +1322,25 @@ const sortedDays = [...visibleTrainingDays].sort(
     });
 
 const summary = document.createElement("summary");
-summary.textContent =
-  "📅 " + dateText + " · 👨‍🎓 " +
-  day.participants.length + " angemeldet";
+
+const dateLine = document.createElement("span");
+dateLine.textContent = "📅 " + dateText;
+
+const participantsLine = document.createElement("span");
+participantsLine.textContent =
+  "👨‍🎓 " + day.participants.length + " angemeldet";
+
+if (window.matchMedia("(max-width: 600px)").matches) {
+  dateLine.style.display = "block";
+  participantsLine.style.display = "block";
+  participantsLine.style.marginTop = "6px";
+  box.style.marginBottom = "20px";
+} else {
+  dateLine.textContent += " · ";
+}
+
+summary.appendChild(dateLine);
+summary.appendChild(participantsLine);
 summary.style.fontWeight = "bold";
 summary.style.cursor = "pointer";
 box.appendChild(summary);
