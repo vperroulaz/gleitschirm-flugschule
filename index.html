@@ -158,18 +158,17 @@ label {
   margin-bottom: 14px;
 }
 @media (max-width: 600px) {
-  .registration-row {
+.registration-row {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
     padding: 12px;
-    padding-right: 64px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
-  }
+}
 
   .registration-flight-controls {
   display: flex;
@@ -1410,7 +1409,8 @@ flightInput.style.minWidth = "0";
 const flightControls = document.createElement("div");
 flightControls.classList.add("registration-flight-controls");
 flightControls.style.cssText =
-  "display:flex; flex-direction:row; align-items:center; gap:10px; width:100%;";
+flightControls.style.cssText =
+  "display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:10px; width:100%;";
 flightControls.appendChild(flightInput);
 row.appendChild(flightControls);
 
