@@ -991,16 +991,24 @@ closeButton.onclick = () => {
 
 details.appendChild(closeButton);
 addText(details, "h2", student.name);
-  addText(
+const gliderInfo = addText(
   details,
   "p",
   "🪂 Schirm: " + (student.glider || "Nicht eingetragen")
 );
-  addText(
+
+gliderInfo.innerHTML =
+  "🪂 <strong>Schirm:</strong> " +
+  (student.glider || "Nicht eingetragen");
+ const weightInfo = addText(
   details,
   "p",
   "⚖️ Gewicht: " + (student.weight == null ? "Nicht eingetragen" : student.weight + " kg")
 );
+
+weightInfo.innerHTML =
+  "⚖️ <strong>Gewicht:</strong> " +
+  (student.weight == null ? "Nicht eingetragen" : student.weight + " kg");
 const flightRow = document.createElement("div");
 flightRow.style.cssText =
   "display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:12px 0;";
@@ -1079,7 +1087,12 @@ deletingStudentIds.add(student.id);
 
 details.appendChild(deleteButton);
 
-  // MANÖVER
+// MANÖVER
+  const maneuverDivider = document.createElement("hr");
+  maneuverDivider.style.cssText =
+    "border:0; border-top:1px solid #e2e8f0; margin:24px 0;";
+  details.appendChild(maneuverDivider);
+
   addText(details, "h3", "🪂 Manöver");
 
   const progress = document.createElement("div");
