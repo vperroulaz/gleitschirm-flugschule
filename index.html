@@ -71,6 +71,18 @@ label {
   gap: 12px;
   padding: 8px 0;
 }
+@media (min-width: 601px) {
+  .registration-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+}
 .maneuver {
   padding: 12px 0;
   border-bottom: 1px solid #eee;
@@ -1392,6 +1404,7 @@ info.appendChild(materialLine);
 row.appendChild(info);
 
 row.classList.add("registration-row");
+row.style.flexWrap = "wrap";
 
 // Fluganzahl für diesen Schüler eingeben
 const flightInput = document.createElement("input");
