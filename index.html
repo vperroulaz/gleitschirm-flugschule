@@ -182,12 +182,13 @@ label {
     width: 80px !important;
     box-sizing: border-box;
   }
-   .registration-save-button {
-  flex: 1;
-  min-width: 0;
+.registration-save-button {
+  flex: 0 0 auto;
   width: auto;
+  min-width: max-content;
   box-sizing: border-box;
-  padding: 12px 8px;
+  padding: 12px 10px;
+  white-space: nowrap;
 }
   .registration-remove-button {
   position: absolute;
@@ -1418,7 +1419,6 @@ saveFlightButton.style.background = "#16a34a";
 saveFlightButton.style.whiteSpace = "nowrap";
 saveFlightButton.style.width = "auto";
 saveFlightButton.style.flex = "1 1 auto";
-saveFlightButton.style.minWidth = "0";
 saveFlightButton.style.padding = "12px 8px";
 saveFlightButton.style.margin = "0";
 flightControls.appendChild(saveFlightButton);
