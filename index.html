@@ -1404,12 +1404,18 @@ flightInput.classList.add("registration-flight-input");
 
 const flightControls = document.createElement("div");
 flightControls.classList.add("registration-flight-controls");
+flightControls.style.cssText =
+  "display:flex; flex-direction:row; align-items:center; gap:10px; width:100%;";
 flightControls.appendChild(flightInput);
 row.appendChild(flightControls);
 
 const saveFlightButton = document.createElement("button");
-saveFlightButton.textContent = "Flüge speichern";
+saveFlightButton.textContent = "✓ Flüge speichern";
 saveFlightButton.classList.add("registration-save-button");
+saveFlightButton.style.background = "#16a34a";
+saveFlightButton.style.width = "auto";
+saveFlightButton.style.flex = "1";
+saveFlightButton.style.margin = "0";
 flightControls.appendChild(saveFlightButton);
 const savedMessage = document.createElement("span");
 savedMessage.textContent = "✅ Gespeichert";
