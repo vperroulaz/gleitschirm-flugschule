@@ -1001,9 +1001,18 @@ addText(details, "h2", student.name);
   "p",
   "⚖️ Gewicht: " + (student.weight == null ? "Nicht eingetragen" : student.weight + " kg")
 );
-  const flightCount = addText(
-  details, "p", student.flights + " Flüge"
+const flightRow = document.createElement("div");
+flightRow.style.cssText =
+  "display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:12px 0;";
+
+const flightCount = addText(
+  flightRow, "span", student.flights + " Flüge"
 );
+
+flightCount.style.cssText =
+  "font-weight:bold; margin-right:8px;";
+
+details.appendChild(flightRow);
 
 const plusButton = document.createElement("button");
 plusButton.textContent = "➕ 1 Flug";
@@ -1015,7 +1024,7 @@ save(student);
   renderStudents();
 };
 
-details.appendChild(plusButton);
+flightRow.appendChild(plusButton);
 const minusButton = document.createElement("button");
 minusButton.textContent = "➖ 1 Flug";
 minusButton.style.background = "#64748b";
@@ -1029,7 +1038,7 @@ minusButton.onclick = () => {
   renderStudents();
 };
 
-details.appendChild(minusButton);
+flightRow.insertBefore(minusButton, plusButton);
   const editButton = document.createElement("button");
   editButton.textContent = "✏️ Schüler bearbeiten";
   editButton.onclick = () => openEditor(id);
