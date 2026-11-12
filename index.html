@@ -225,6 +225,19 @@ label {
   border-radius: 8px;
 }
 }
+/* Schulungstage nur auf dem Computer */
+@media (min-width: 601px) {
+  .training-day-entry {
+    margin-bottom: 20px;
+  }
+
+  .training-day-entry > summary {
+    font-size: 20px;
+    line-height: 1.5;
+    padding: 8px 0;
+  }
+}
+  
 </style>
 </head>
 <body>
@@ -1307,6 +1320,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
  sortedDays.forEach(day => {
   const box = document.createElement("details");
   box.className = "maneuver";
+  box.classList.add("training-day-entry");
 
   // Geöffneten Zustand wiederherstellen
   box.dataset.dayId = String(day.id);
